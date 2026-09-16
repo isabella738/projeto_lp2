@@ -1,0 +1,15 @@
+Cada livro deve ter estas informações:
+- código
+- título
+- autor
+- ano de publicação
+- quantidade de exemplares disponíveis
+
+Requisitos da Versão 1
+- Cadastrar livro
+- listar
+- consultar por código
+- emprestar
+- devolver
+- sair
+- tratar entradas inválidas
