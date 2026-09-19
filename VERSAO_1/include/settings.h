@@ -1,3 +1,10 @@
+/*
+
+Possui a definicao de macros, structs, e referencia as principais variaveis do programa.
+Incluir 'settings.h' em um arquivo e o suficiente para que ele reconheca todos estes dados.
+
+*/
+
 #ifndef SETTINGS
 
 #define SETTINGS
@@ -21,5 +28,8 @@ typedef struct{
     int quantidade;
     int edicao;//
 }Livros;
+
+extern Livros livro[MAX_LIVROS];
+extern int total_livros;
 
 #endif

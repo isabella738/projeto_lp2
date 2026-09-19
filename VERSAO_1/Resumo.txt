@@ -4,6 +4,8 @@ Cada livro deve ter estas informações:
 - autor
 - ano de publicação
 - quantidade de exemplares disponíveis
+- editora (novo)
+- edição (novo)
 
 Requisitos da Versão 1
 - Cadastrar livro

@@ -18,10 +18,11 @@ int remover_espacos(char texto[]){
     strcpy(texto, novo);
 }
 
+#define VOLTAR_APAGAR "\033[F\r\033[2K\r"
+
 int main(){
-    char texto[100];
-    fgets(texto, 100, stdin);
-    remover_espacos(texto);
-    printf("%s.", texto);
+    
+    printf("linha1\nlinha2\nlinha3"VOLTAR_APAGAR);
+    printf("?\n\n\n");
     return 0;
 }

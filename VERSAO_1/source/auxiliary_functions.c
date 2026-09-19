@@ -1,7 +1,9 @@
 /*
+
 Estas funcoes fazem pequenas verificacoes que serao usadas pelas funcoes de verificacao de entrada
 em input_verification. Diferente daquelas, estas tem funcao mais curta e objetiva, somente para 
 auxiliar, e nao exibem mensagem de erro.
+
 */
 
 #include <stdio.h>
@@ -9,6 +11,7 @@ auxiliar, e nao exibem mensagem de erro.
 #include "settings.h"
 
 int sim(){
+    printf("[s/n] ");
     char c; scanf("%c", &c);
 
     if(c == 'S' || c == 's') return 1;
