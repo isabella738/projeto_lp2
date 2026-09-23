@@ -119,16 +119,16 @@ int ler_novo_codigo(char codigo[]){
 }
 
 int ler_livro(Livros *livro){
-    char titulo[TAM_TITULO], autor[TAM_AUTOR], editora[TAM_EDITORA], codigo[TAM_CODIGO];
+    char titulo[TAM_STRING], autor[TAM_STRING], editora[TAM_STRING], codigo[TAM_CODIGO];
     int ano, quantidade, edicao;
 
-    printf("Titulo do livro:\n"); while(ler_string(titulo, TAM_TITULO)); 
+    printf("Titulo do livro:\n"); while(ler_string(titulo, TAM_STRING)); 
     if(string_vazia(titulo)) return 0;
 
-    printf("Nome do autor:\n"); while(ler_string(autor, TAM_AUTOR)); 
+    printf("Nome do autor:\n"); while(ler_string(autor, TAM_STRING)); 
     if(string_vazia(autor)) return 0;
 
-    printf("Editora:\n"); while(ler_string(editora, TAM_EDITORA)); 
+    printf("Editora:\n"); while(ler_string(editora, TAM_STRING)); 
     if(string_vazia(editora)) return 0;
 
     printf("Ano de publicacao:\n"); while(ler_int(&ano, 0, ANO_ATUAL));

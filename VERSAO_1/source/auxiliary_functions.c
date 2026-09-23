@@ -1,8 +1,7 @@
 /*
 
-Estas funcoes fazem pequenas verificacoes que serao usadas pelas funcoes de verificacao de entrada
-em input_verification. Diferente daquelas, estas tem funcao mais curta e objetiva, somente para 
-auxiliar, e nao exibem mensagem de erro.
+Estas funcoes fazem pequenas verificacoes/acoes curtas e objetivas, somente para auxiliar.
+Sao genericas e nao exibem mensagem de erro.
 
 */
 
@@ -68,6 +67,14 @@ int strcmp_noCS(char string1[], char string2[]){
     return strcmp(novo1, novo2) > 0;
 }
 
+int strstr_noCS(char string1[], char string2[]){
+    char novo1[strlen(string1)], novo2[strlen(string2)];
+    
+    letras_minusculas(novo1); letras_minusculas(novo2);
+    
+    return strstr(novo1, novo2) != NULL;
+}
+
 int busca_codigo(Livros livro[], int tam, char codigo[]){
     for(int i=0; i<tam; i++){
         if(strcmp(livro[i].codigo, codigo) == 0) return i;
@@ -85,4 +92,18 @@ void exibir_info_livro(Livros livro){
     printf("Exemplares disponiveis: %d\n", livro.quantidade);
 }
 
+void exibir_info_rapida(Livros livro){
+    printf("(%s) %s - %s\n", livro.codigo, livro.titulo, livro.autor);
+}
 
+void imprimir_lista_livros(Livros vetor[], int max){
+    for(int i=0; i<max; i++){
+        exibir_info_rapida(livro[i]);
+    }
+}
+
+void swap_livros(Livros *livro1, Livros *livro2){
+    Livros temp = *livro1;
+    *livro1 = *livro2;
+    *livro2 = temp;
+}
