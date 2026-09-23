@@ -1,5 +1,7 @@
 #include "settings.h"
 
+int ler_senha(char senha[]);
+
 int ler_string(char texto[], int tam);
 
 int ler_int(int *inteiro, int min, int max);

@@ -12,8 +12,8 @@ auxiliar, e nao exibem mensagem de erro.
 
 int sim(){
     printf("[s/n] ");
-    char c; scanf("%c", &c);
-
+    char c; scanf(" %c", &c);
+    while(getchar() != '\n'); 
     if(c == 'S' || c == 's') return 1;
     return 0;
 }
@@ -27,12 +27,12 @@ int string_vazia(char string[]){
 }
 
 int remover_espacos(char string[]){
-    char novo[strlen(string)];
+    char novo[strlen(string)+1];
     int n = 0;
 
     if(string[strlen(string)-1] == '\n') string[strlen(string)-1] = '\0';
 
-    for(int i=0; i<strlen(string)-1; i++){
+    for(int i=0; i<strlen(string); i++){
         if(string[i] == ' ' && (string[i+1] == ' ' || string[i+1] == '\0')) continue;
         else{ novo[n] = string[i]; n++;}
     }

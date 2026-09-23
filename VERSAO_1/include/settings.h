@@ -18,18 +18,30 @@ Incluir 'settings.h' em um arquivo e o suficiente para que ele reconheca todos e
 #define VOLTAR_LINHA "\033[F\r"
 #define APAGAR_LINHA "\033[2K\r"
 #define VOLTAR_APAGAR "\033[F\r\033[2K\r"
+#define CODIGO_PROP "12345" // codigo de acesso do proprietario dps mudar (ou nao k)
+#define TAM_SENHA 8
+#define TAM_USUARIOS 100
 
 typedef struct{
     char codigo[TAM_CODIGO];
     char titulo[TAM_TITULO];
     char autor[TAM_AUTOR];
-    char editora[TAM_EDITORA];//
+    char editora[TAM_EDITORA];
     int ano;
     int quantidade;
     int edicao;//
 }Livros;
 
+typedef struct {
+    char nome[TAM_AUTOR];
+    char senha[TAM_SENHA];
+}Usuarios;
+
 extern Livros livro[MAX_LIVROS];
 extern int total_livros;
+
+extern Usuarios usuario[TAM_USUARIOS];
+extern int total_usuarios;
+
 
 #endif

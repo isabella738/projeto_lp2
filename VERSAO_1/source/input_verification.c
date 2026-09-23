@@ -36,11 +36,11 @@ printf(APAGAR_LINHA) antes do return 0, para apagar quaisquer mensagem de erro a
 
 int ler_string(char string[], int tam){
     printf("> ");
-    char teste[tam+100]; fgets(teste, tam, stdin);
+    char teste[tam+100]; fgets(teste, tam+1, stdin);
 
     remover_espacos(teste);
 
-    if(strlen(teste) > tam){
+    if(strlen(teste) >= tam){
         printf("Voce estourou o limite de caracteres. Tente novamente." VOLTAR_APAGAR);
         return 1;
     }
@@ -53,7 +53,7 @@ int ler_string(char string[], int tam){
 int ler_int(int *inteiro, int min, int max){
     printf("> ");
 
-    char teste[5]; while(ler_string(teste, 5));
+    char teste[5]; while(ler_string(teste, 20));
 
     if(string_vazia(teste)){
         printf("Insira um numero ou 0 para cancelar a acao." VOLTAR_APAGAR);
@@ -65,7 +65,7 @@ int ler_int(int *inteiro, int min, int max){
         return 1;
     }
 
-    int n;
+    int n=0;
     for(int i=0; i<strlen(teste); i++){
         n *= 10; n += teste[i] - '0';
     }
@@ -77,7 +77,7 @@ int ler_int(int *inteiro, int min, int max){
 
     printf(APAGAR_LINHA);
     (*inteiro) = n;
-    return 0;
+    return 0; 
 }
 
 int ler_codigo(char string[]){
@@ -88,6 +88,19 @@ int ler_codigo(char string[]){
         return 1;
     }
     
+    strcpy(string, teste);
+    printf(APAGAR_LINHA);
+    return 0;
+}
+
+int ler_senha(char senha[]) { // essa aqui ficou bem parecida com ler_codigo, talvez de p fazer uma unica mais generica?
+    ler_string(senha, TAM_SENHA);
+
+    if(strlen(senha) != TAM_SENHA){
+        printf("A senha deve conter exatamente %d caracteres. Tente novamente." VOLTAR_APAGAR, TAM_SENHA);
+        return 1;
+    }
+
     printf(APAGAR_LINHA);
     return 0;
 }
@@ -96,7 +109,7 @@ int ler_novo_codigo(char codigo[]){
     ler_codigo(codigo);
     if(string_vazia(codigo)) return 0;
 
-    if(busca_codigo(livro, total_livros, codigo) > 0){
+    if(busca_codigo(livro, total_livros, codigo) >= 0){
         printf("Ja existe um livro cadastrado com este codigo. Tente Novamente." VOLTAR_APAGAR);
         return 1;
     }
@@ -129,4 +142,6 @@ int ler_livro(Livros *livro){
 
     printf("Codigo:\n"); while(ler_novo_codigo(codigo)); 
     if(string_vazia(codigo)) return 0;
+
+    return 1;
 }

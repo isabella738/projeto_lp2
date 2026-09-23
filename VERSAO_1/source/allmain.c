@@ -3,5 +3,6 @@
 #include "main.h"
 
 int main(){
+    entrada_usuario();
     return 0;
 }
