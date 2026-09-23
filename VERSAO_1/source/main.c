@@ -295,7 +295,7 @@ int busca(){
     if(!contador){
         printf("Nao foram encontrados resultados para esta busca.\n");
     }
-    else printf("Foram encontrados %d resultados para esta busca.\n");
+    else printf("Foram encontrados %d resultados para esta busca.\n", contador);
 
     printf("\nRealizar nova busca?");
     if(sim())return 1;
