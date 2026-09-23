@@ -21,3 +21,5 @@ void exibir_info_rapida(Livros livro);//exibe codigo, titulo e autor somente
 void imprimir_lista_livros(Livros vetor[], int max);//imprime qualquer vetor do tipo Livros com informacoes rapidas
 
 void swap_livros(Livros *livro1, Livros *livro2);
+
+int livro_duplicado(Livros l);//verifica se existe um ja existe um livro com o mesmo titulo, autor, editora, e edicao de 'l' cadastrado no sistema

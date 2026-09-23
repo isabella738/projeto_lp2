@@ -134,9 +134,25 @@ int cadastro(){ // so para o proprietario
     printf("     CADASTRO DE LIVROS    \n");
     printf("**=======================**\n");
 
+    Livros l;
     printf("Digite as informacões sobre o novo livro:\n");
-    ler_livro(&livro[total_livros]);
-    total_livros++;
+    if(ler_livro(&l)){
+        int x = livro_duplicado(l);
+
+        if(x >= 0){
+            printf("Encontramos um livro ja cadastrado com informacoes semelhantes a este:\n");
+            exibir_info_livro(livro[x]);
+            printf("Deseja cadastrar mesmo assim? ");
+            if(sim()){
+                livro[total_livros] = l;
+                total_livros++;
+                printf("Cadastro realizado com sucesso.\n");
+            }
+            else printf("Acao cancelada.\n");
+        }
+        
+    }
+    else return 0;
 
     printf("Fazer o cadastro de um novo livro?\n");
     if(sim()) return 1;

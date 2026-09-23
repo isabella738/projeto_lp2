@@ -107,3 +107,17 @@ void swap_livros(Livros *livro1, Livros *livro2){
     *livro1 = *livro2;
     *livro2 = temp;
 }
+
+int livro_duplicado(Livros l){
+    for(int i=0; i<total_livros; i++){
+        int correspondencias = 0;
+
+        if(strcmp_noCS(l.titulo, livro[i].titulo) == 0) correspondencias++;
+        if(strcmp_noCS(l.autor, livro[i].autor) == 0) correspondencias++;
+        if(strcmp_noCS(l.editora, livro[i].editora) == 0) correspondencias++;
+        if(l.edicao == livro[i].edicao) correspondencias++;
+
+        if(correspondencias == 4) return i;
+    }
+    return -1;
+}
