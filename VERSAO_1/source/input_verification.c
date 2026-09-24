@@ -36,7 +36,7 @@ printf(APAGAR_LINHA) antes do return 0, para apagar quaisquer mensagem de erro a
 
 int ler_string(char string[], int tam){
     printf("> ");
-    char teste[tam+100]; fgets(teste, tam+1, stdin);
+    char teste[tam+100]; fgets(teste, tam+100, stdin);
 
     remover_espacos(teste);
 
@@ -53,7 +53,7 @@ int ler_string(char string[], int tam){
 int ler_int(int *inteiro, int min, int max){
     printf("> ");
 
-    char teste[5]; while(ler_string(teste, 20));
+    char teste[10]; while(ler_string(teste, 10));
 
     if(string_vazia(teste)){
         printf("Insira um numero ou 0 para cancelar a acao." VOLTAR_APAGAR);
@@ -81,32 +81,33 @@ int ler_int(int *inteiro, int min, int max){
 }
 
 int ler_codigo(char string[]){
-    char teste[5]; ler_string(teste, TAM_CODIGO);
+    char teste[TAM_CODIGO]; 
+    if(ler_string(teste, TAM_CODIGO)) return 1;
 
-    if(strlen(teste) != TAM_CODIGO){
+    if(string_vazia(teste)){
+        strcpy(string, teste);
+        printf(APAGAR_LINHA);
+        return 0;
+    }
+
+    if(strlen(teste) != TAM_CODIGO - 1){
         printf("Formato de codigo invalido. Tente novamente." VOLTAR_APAGAR);
         return 1;
     }
-    
+
     strcpy(string, teste);
     printf(APAGAR_LINHA);
     return 0;
 }
 
-int ler_senha(char senha[]) { // essa aqui ficou bem parecida com ler_codigo, talvez de p fazer uma unica mais generica?
-    ler_string(senha, TAM_SENHA);
-
-    if(strlen(senha) != TAM_SENHA){
-        printf("A senha deve conter exatamente %d caracteres. Tente novamente." VOLTAR_APAGAR, TAM_SENHA);
-        return 1;
-    }
-
+int ler_senha(char senha[]) { 
+    if(ler_string(senha, TAM_SENHA)) return 1;
     printf(APAGAR_LINHA);
     return 0;
 }
 
 int ler_novo_codigo(char codigo[]){
-    ler_codigo(codigo);
+    if (ler_codigo(codigo)) return 1;
     if(string_vazia(codigo)) return 0;
 
     if(busca_codigo(livro, total_livros, codigo) >= 0){
@@ -118,7 +119,7 @@ int ler_novo_codigo(char codigo[]){
     return 0;
 }
 
-int ler_livro(Livros *livro){
+int ler_livro(Livros *l){
     char titulo[TAM_STRING], autor[TAM_STRING], editora[TAM_STRING], codigo[TAM_CODIGO];
     int ano, quantidade, edicao;
 
@@ -142,6 +143,15 @@ int ler_livro(Livros *livro){
 
     printf("Codigo:\n"); while(ler_novo_codigo(codigo)); 
     if(string_vazia(codigo)) return 0;
+
+    // salvar tudo
+    strcpy(l->titulo, titulo);
+    strcpy(l->autor, autor);
+    strcpy(l->editora, editora);
+    strcpy(l->codigo, codigo);
+    l->ano = ano;
+    l->edicao = edicao;
+    l->quantidade = quantidade;
 
     return 1;
 }

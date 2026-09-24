@@ -1,3 +1,5 @@
+int menu_proprietario();
+
 int menu(int posicao);
 
 int cadastro_usuario();

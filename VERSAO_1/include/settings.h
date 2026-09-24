@@ -13,7 +13,7 @@ Incluir 'settings.h' em um arquivo e o suficiente para que ele reconheca todos e
 #define MAX_EXEMPLARES 100
 #define TAM_USUARIOS 100
 
-#define TAM_CODIGO 5
+#define TAM_CODIGO 6
 #define TAM_SENHA 8
 #define TAM_STRING 100
 #define ANO_ATUAL 2026

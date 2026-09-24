@@ -50,28 +50,27 @@ int somente_numeros(char string[]){
 }
 
 int letras_minusculas(char string[]){
-    char novo[strlen(string)];
-    for(int i=0; i<strlen(string); i++){
+    for(int i=0; string[i] != '\0'; i++){
         if(string[i] >= 'A' && string[i] <= 'Z'){
-            novo[i] += 'a' - 'A';
+            string[i] += 'a' - 'A';
         }
-        else novo[i] = string[i];
     }
+    return 0;
 }
 
 int strcmp_noCS(char string1[], char string2[]){
-    char novo1[strlen(string1)], novo2[strlen(string2)];
-    
+    char novo1[TAM_STRING], novo2[TAM_STRING];
+    strcpy(novo1, string1);
+    strcpy(novo2, string2);
     letras_minusculas(novo1); letras_minusculas(novo2);
-
-    return strcmp(novo1, novo2) > 0;
+    return strcmp(novo1, novo2);
 }
 
 int strstr_noCS(char string1[], char string2[]){
-    char novo1[strlen(string1)], novo2[strlen(string2)];
-    
+    char novo1[TAM_STRING], novo2[TAM_STRING];
+    strcpy(novo1, string1);
+    strcpy(novo2, string2);
     letras_minusculas(novo1); letras_minusculas(novo2);
-    
     return strstr(novo1, novo2) != NULL;
 }
 
@@ -98,7 +97,7 @@ void exibir_info_rapida(Livros livro){
 
 void imprimir_lista_livros(Livros vetor[], int max){
     for(int i=0; i<max; i++){
-        exibir_info_rapida(livro[i]);
+        exibir_info_rapida(vetor[i]);
     }
 }
 
