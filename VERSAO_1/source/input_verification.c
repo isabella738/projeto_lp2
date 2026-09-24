@@ -1,11 +1,5 @@
 /*
 
-Como o programa de gerenciamento de biblioteca possui tipos de entrada especificos para seu contexto,
-como código e nome de livro, existem outras funcoes, derivadas de ler_string, proprias para a leitura
-destes dados com suas respectivas verificacoes.
-Desta forma, todas as funcoes de entrada do tipo "ler_'input'" seguem o mesmo formato visto acima
-
-
 O porgrama possui diferentes tipos de dados, que precisam passar por diversas verificacoes antes
 de serem armazenados na maquina. Porem, trabalhar com diversas verificacoes e um processo demorado e 
 propenso a erros. Este arquivo contem as funcoes que automatizam este processo. Elas solicitam a 
@@ -51,8 +45,6 @@ int ler_string(char string[], int tam){
 }
 
 int ler_int(int *inteiro, int min, int max){
-    printf("> ");
-
     char teste[10]; while(ler_string(teste, 10));
 
     if(string_vazia(teste)){
@@ -119,7 +111,7 @@ int ler_novo_codigo(char codigo[]){
     return 0;
 }
 
-int ler_livro(Livros *l){
+int ler_livro(Livros *l){//return 1 = sucesso
     char titulo[TAM_STRING], autor[TAM_STRING], editora[TAM_STRING], codigo[TAM_CODIGO];
     int ano, quantidade, edicao;
 
@@ -139,7 +131,6 @@ int ler_livro(Livros *l){
     if(!edicao) return 0;
 
     printf("Numero de exemplares disponiveis:\n"); while(ler_int(&quantidade, 0, MAX_EXEMPLARES));
-    if(!quantidade) return 0;
 
     printf("Codigo:\n"); while(ler_novo_codigo(codigo)); 
     if(string_vazia(codigo)) return 0;

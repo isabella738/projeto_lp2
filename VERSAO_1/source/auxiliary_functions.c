@@ -74,9 +74,9 @@ int strstr_noCS(char string1[], char string2[]){
     return strstr(novo1, novo2) != NULL;
 }
 
-int busca_codigo(Livros livro[], int tam, char codigo[]){
+int busca_codigo(Livros lista[], int tam, char codigo[]){
     for(int i=0; i<tam; i++){
-        if(strcmp(livro[i].codigo, codigo) == 0) return i;
+        if(strcmp(lista[i].codigo, codigo) == 0) return i;
     }
     return -1;
 }
@@ -119,4 +119,11 @@ int livro_duplicado(Livros l){
         if(correspondencias == 4) return i;
     }
     return -1;
+}
+
+void apagar_livro(Livros lista[], int x, int *tam){
+    for(int i=x; i<(*tam) - 1; i++){
+        lista[i] = lista[i+1];
+    }
+    (*tam)--;
 }

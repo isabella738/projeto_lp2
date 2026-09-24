@@ -29,86 +29,8 @@ Exemplos de uso:
 #include "auxiliary_functions.h"
 #include "main.h"
 
-int cadastro_usuario() {
-    printf("**=======================**\n");
-    printf("    CADASTRO DE USUARIO    \n");
-    printf("**=======================**\n");
-
-    do {
-        char nome[TAM_STRING], senha[TAM_SENHA];
-        if(total_usuarios >= TAM_USUARIOS) { // tirar dps da alocacao dinamica
-            printf("Limite de usuarios atingido.\n");
-            break;
-        }
-
-        int repetido;
-        do {
-            printf("Digite seu nome:\n"); 
-            while(ler_string(nome, TAM_STRING));
-            if(string_vazia(nome)) return 0;
-            repetido = 0;
-            for(int i = 0; i < total_usuarios; i++) {
-                if(strcmp(nome, usuario[i].nome)==0) {
-                    repetido = 1;
-                    break;
-                }
-            }
-            if (repetido) {
-                printf("Ja existe um usuario com esse nome. Tente novamente.\n");
-            }
-        } while(repetido);
-        printf("Crie uma senha de (%d caracteres):\n", TAM_SENHA-1); 
-        while(ler_senha(senha));
-        if(string_vazia(senha)) return 0;
-
-        strcpy(usuario[total_usuarios].nome, nome);
-        strcpy(usuario[total_usuarios].senha, senha);
-        total_usuarios++;
-
-        printf("Cadastrar outro usuario?\n");
-    } while(sim());
-
-    entrada_usuario();
-
-    return 0;
-}
-
-int cadastro(){ // so para o proprietario
-    printf("**=======================**\n");
-    printf("     CADASTRO DE LIVROS    \n");
-    printf("**=======================**\n");
-
-    if(total_livros >= MAX_LIVROS) {
-        printf("Limite de livros atingido!"); // dps a gente tira com a alocacao dinamica
-    }
-
-    Livros l;
-    printf("Digite as informacões sobre o novo livro:\n");
-    if(!ler_livro(&l)) return 0;
-    
-    int x = livro_duplicado(l);
-    int salvar = 1;
-
-    if(x >= 0){
-        printf("Encontramos um livro ja cadastrado com informacoes semelhantes a este:\n");
-        exibir_info_livro(livro[x]);
-        printf("Deseja cadastrar mesmo assim? ");
-        salvar = sim();
-    }
-
-    if(salvar) {
-        livro[total_livros] = l;
-        total_livros++;
-        printf("Cadastro realizado com sucesso!");
-    }
-    else {
-        printf("Acao cancelada.\n");
-    }
-
-    printf("Fazer o cadastro de um novo livro?\n");
-    if(sim()) return 1;
-    return 0;
-}
+//
+//Ações de usuário
 
 int listagem(){
     /*
@@ -208,18 +130,6 @@ int listagem(){
     return 0;
 }
 
-int consulta(){
-    return 0;
-}
-
-int emprestimo(){
-    return 0;
-}
-
-int devolucao(){
-    return 0;
-}
-
 int busca(){
     /*
         Procura por:
@@ -273,7 +183,19 @@ int busca(){
     return 0;
 }
 
-int menu (int posicao) {
+int consulta(){
+    return 0;
+}
+
+int emprestimo(){
+    return 0;
+}
+
+int devolucao(){
+    return 0;
+}
+
+int menu (int posicao) {//menu comum
     int r;
     do {
     printf("**=======================**\n");
@@ -299,10 +221,192 @@ int menu (int posicao) {
             while(consulta());
             break;
         default:
-            entrada_usuario();
+            printf("Voce sera redirecionado para a tela de login. Continuar? ");
+            if(sim()) entrada_usuario();
             break;
     }
     } while (r != 6);
+    return 0;
+}
+
+//
+//Ações do proprietario
+
+int cadastro(){ // so para o proprietario
+    printf("**=======================**\n");
+    printf("     CADASTRO DE LIVROS    \n");
+    printf("**=======================**\n");
+
+    if(total_livros >= MAX_LIVROS) {
+        printf("Limite de livros atingido!"); // dps a gente tira com a alocacao dinamica
+    }
+
+    Livros l;
+    printf("Digite as informacões sobre o novo livro:\n");
+    if(!ler_livro(&l)) return 0;
+    
+    int x = livro_duplicado(l);
+    int salvar = 1;
+
+    if(x >= 0){
+        printf("Encontramos um livro ja cadastrado com informacoes semelhantes a este:\n");
+        exibir_info_livro(livro[x]);
+        printf("Deseja cadastrar mesmo assim? ");
+        salvar = sim();
+    }
+
+    if(salvar) {
+        livro[total_livros] = l;
+        total_livros++;
+        printf("Cadastro realizado com sucesso!");
+    }
+    else {
+        printf("Acao cancelada.\n");
+    }
+
+    printf("Fazer o cadastro de um novo livro?\n");
+    if(sim()) return 1;
+    return 0;
+}
+
+int editar_livro(){
+    printf("**=======================**\n");
+    printf("       EDITAR LIVROS       \n");
+    printf("**=======================**\n");
+
+    if(total_livros == 0){
+        printf("Nao existem livros cadastrados no sistema. Digite 1 para iniciar um novo cadastro.\n");
+        return 0;
+    }
+
+    char codigo[TAM_CODIGO];
+    int x;
+    printf("Insira o código do livro: \n"); 
+    
+    //loop para escolha de um livro
+    do{
+        while(ler_codigo(codigo));
+        if(string_vazia(codigo)) return 0;
+        
+        x = busca_codigo(livro, total_livros, codigo);
+        if(x < 0){
+            printf("Nao existe um livro cadastrado com este codigo. Tente novamente.\n"VOLTAR_APAGAR);
+            continue;
+        }
+        printf(APAGAR_LINHA);
+
+    }while(x < 0);
+
+    //loop para edicoes no livro escolhido
+    do{
+        printf("\n------------------\n");
+        printf("Livro selecionado:\n"); exibir_info_livro(livro[x]);
+
+        printf("\nEscolha uma acao:\n");
+        printf("[1] Editar Titulo\n");
+        printf("[2] Editar Autor\n");
+        printf("[3] Alterar ano de publicacao\n");
+        printf("[4] Alterar Editora\n");
+        printf("[5] Alterar Edicao\n");
+        printf("[6] Ajustar numero de exemplares disponiveis\n");
+        printf("[7] Excluir Livro\n");
+        printf("[0] Sair\n\n");
+
+        int escolha; while(ler_int(&escolha, 0, 7));
+        if(!escolha) return 0;
+
+        int sucesso=0;
+        char novo[TAM_STRING]; int n;
+        switch(escolha){
+            case 1://titulo
+                printf("Novo titulo:\n"); while(ler_string(novo, TAM_STRING));
+                if(!string_vazia(novo)){
+
+                    printf("A seguinte mudanca sera feita:\n");
+                    printf("\n%s -> %s\n", livro[x].titulo, novo);
+                    printf("\nContinuar? ");
+
+                    if(sim()){
+                        strcpy(livro[x].titulo, novo);
+                        sucesso=1;
+                    }
+                }
+                break;
+            case 2://autor
+                printf("Novo autor:\n"); while(ler_string(novo, TAM_STRING));
+                if(!string_vazia(novo)){
+
+                    printf("A seguinte mudanca sera feita:\n");
+                    printf("\n%s -> %s\n", livro[x].autor, novo);
+                    printf("\nContinuar? ");
+
+                    if(sim()){
+                        strcpy(livro[x].autor, novo);
+                        sucesso=1;
+                    }                    
+                }
+                break;
+            case 3://ano
+                printf("Insira o ano de publicacao:\n");
+                while(ler_int(&n, 0, ANO_ATUAL));
+
+                livro[x].ano = n;
+                sucesso=1;
+
+                break;
+            case 4://editora
+                printf("Nova editora:\n"); while(ler_string(novo, TAM_STRING));
+                if(!string_vazia(novo)){
+
+                    printf("A seguinte mudanca sera feita:\n");
+                    printf("\n%s -> %s\n", livro[x].editora, novo);
+                    printf("\nContinuar? ");
+
+                    if(sim()){
+                        strcpy(livro[x].editora, novo);
+                        sucesso=1;
+                    }
+                    
+                }
+
+                break;
+            case 5://edicao
+                printf("Insira a edicao:\n");
+                while(ler_int(&n, 0, 100));
+                //sei la, 100 é um numero qualquer, nao acho relevante criar uma macro so pra isso.
+                //nao vai existir um livro com mais de CEM edicoes... ne?
+
+                livro[x].edicao = n;
+                sucesso=1;
+
+                break;
+            case 6://exemplares
+                printf("Insira o numero de exemplares:\n");
+                while(ler_int(&n, 0, ANO_ATUAL));
+
+                livro[x].edicao = n;
+                sucesso=1;
+
+                break;
+            case 7://excluir
+                printf("Esta acao nao pode ser desfeita. Tem certeza de que quer continuar? ");
+
+                if(sim()){
+                    apagar_livro(livro, x, &total_livros);
+                    printf("Remocao bem sucedida.\n");
+                    return 0;
+                }
+                break;
+            
+        }
+        
+        if(sucesso) printf("Acao bem sucedida.\n");
+        else printf("Acao cancelada.\n");
+
+    }while(1);
+
+    printf("Fazer edicoes para outro livro? ");
+    if(sim()) return 1;
     return 0;
 }
 
@@ -312,17 +416,64 @@ int menu_proprietario() { // ideiaaa: proprietario poder remover livros e ver o 
     printf("**=======================**\n");
     printf("    AREA DO PROPRIETARIO   \n");
     printf("**=======================**\n");  
-    printf("[1] Cadastrar livro\n[2] Remover livro\n[3] Emprestimos ativos\n[4] Voltar\n");
+    printf("[1] Cadastrar livro\n[2] Editar livro\n[3] Emprestimos ativos\n[4] Voltar\n");
     printf("Digite a opcao que deseja: ");
     while(ler_int(&r, 1, 4));
     switch(r) {
         case 1: while(cadastro()); break;
-        case 2: break;
+        case 2: while(editar_livro()); break;
         case 3: break;
     } 
     } while (r != 4);
 
     entrada_usuario();
+    return 0;
+}
+
+//
+//Fora da biblioteca
+
+int cadastro_usuario() {
+    printf("**=======================**\n");
+    printf("    CADASTRO DE USUARIO    \n");
+    printf("**=======================**\n");
+
+    do {
+        char nome[TAM_STRING], senha[TAM_SENHA];
+        if(total_usuarios >= TAM_USUARIOS) { // tirar dps da alocacao dinamica
+            printf("Limite de usuarios atingido.\n");
+            break;
+        }
+
+        int repetido;
+        do {
+            printf("Digite seu nome:\n"); 
+            while(ler_string(nome, TAM_STRING));
+            if(string_vazia(nome)) return 0;
+            repetido = 0;
+            for(int i = 0; i < total_usuarios; i++) {
+                if(strcmp(nome, usuario[i].nome)==0) {
+                    repetido = 1;
+                    break;
+                }
+            }
+            if (repetido) {
+                printf("Ja existe um usuario com esse nome. Tente novamente.\n");
+            }
+        } while(repetido);
+        printf("Crie uma senha de (%d caracteres):\n", TAM_SENHA-1); 
+        while(ler_senha(senha));
+        if(string_vazia(senha)) return 0;
+
+        strcpy(usuario[total_usuarios].nome, nome);
+        strcpy(usuario[total_usuarios].senha, senha);
+        total_usuarios++;
+
+        printf("Cadastrar outro usuario?\n");
+    } while(sim());
+
+    entrada_usuario();
+
     return 0;
 }
 
