@@ -1,8 +1,8 @@
 int string_vazia(char texto[]);
 
-int sim();
+int sim();//imprime [s/n] e espera um caractere
 
-int remover_espacos(char texto[]);
+int remover_espacos(char texto[]);//remove espacos e o enter do fgets 
 
 int somente_numeros(char texto[]);
 
@@ -23,3 +23,5 @@ void imprimir_lista_livros(Livros vetor[], int max);//imprime qualquer vetor do 
 void swap_livros(Livros *livro1, Livros *livro2);
 
 int livro_duplicado(Livros l);//verifica se existe um ja existe um livro com o mesmo titulo, autor, editora, e edicao de 'l' cadastrado no sistema
+
+void apagar_livro(Livros lista[], int x, int *tam);//apaga o livro x de uma lista do tipo Livros
