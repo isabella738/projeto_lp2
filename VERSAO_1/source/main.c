@@ -183,15 +183,63 @@ int busca(){
     return 0;
 }
 
-int consulta(){
+int consulta(){ // fazer apenas os livros do usuario
     return 0;
 }
 
 int emprestimo(){
+
+    printf("**=======================**\n");
+    printf("        EMPRESTIMO         \n");
+    printf("**=======================**\n");
+
+    if(total_livros == 0){
+        printf("Nao existem livros cadastrados no sistema. Digite 1 para iniciar um novo cadastro.\n");
+        return 0;
+    }
+
+    //busca por codigo p ser exato
+    int x;
+    printf("\nDigite o codigo do livro desejado: ");
+    char cod[TAM_CODIGO];
+    
+    while(ler_codigo(cod));
+    if(string_vazia(cod)) return 0;
+
+    x=busca_codigo(livro, total_livros, cod);
+    if(x<0){
+        printf("O livro nao existe.\n" VOLTAR_APAGAR);
+        return 0;
+    }
+    printf(APAGAR_LINHA);
+
+    //agora q achou vai pegar emprestado
+    int resposta;
+    printf("\nLivro encontrado!\n\n");
+    exibir_info_livro(livro[x]);
+
+    if(livro[x].qtdDisponiveis > 0){
+        printf("\nDeseja fazer um empréstimo?\n1 - Sim\n2 - Nao\n"); 
+        scanf("%d", &resposta);
+        if(resposta == 1){
+            livro->qtdDisponiveis=livro->qtdDisponiveis - 1;
+            printf("\nEmprestimo realizado com sucesso!\n");
+        }else{
+            return 0;
+        }
+    }else{
+        printf("\nNao ha exemplares disponiveis no momento.");
+    }
+
     return 0;
 }
 
 int devolucao(){
+
+    printf("**=======================**\n");
+    printf("         DEVOLUCAO         \n");
+    printf("**=======================**\n");
+
     return 0;
 }
 
@@ -201,7 +249,7 @@ int menu (int posicao) {//menu comum
     printf("**=======================**\n");
     printf("           MENU            \n");
     printf("**=======================**\n");
-    printf("[1] Listagem de livros\n[2] Busca de livros\n[3] Emprestimo\n[4] Devolucao\n[5] Consulta de livros\n[6] Voltar\n"); 
+    printf("[1] Listagem de livros\n[2] Busca de livros\n[3] Emprestimo\n[4] Devolucao\n[5] Meus livros\n[6] Voltar\n"); 
     printf("Digite a opcao que deseja: ");
     while(ler_int(&r, 1, 6));
     switch(r) {
@@ -499,6 +547,11 @@ int entrada_usuario() {
     } else if (resposta == 2) { //login usuario
         char nome[TAM_STRING], senha[TAM_SENHA];
 
+        if (total_usuarios <= 0) {
+            printf("Nao exitem usuarios cadastrados.\n");
+            return 0; // ajeitar isso dps
+        }
+
         printf("Digite seu nome (ou deixe vazio para cancelar):\n"); 
         while(ler_string(nome, TAM_STRING));
         if(string_vazia(nome)) return 0;
@@ -540,7 +593,6 @@ int entrada_usuario() {
         cadastro_usuario();
     } else {
         printf("Saindo do Sistema...");
-        return 0;
     }
 
 }

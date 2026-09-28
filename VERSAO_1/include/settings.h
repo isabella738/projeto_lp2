@@ -30,12 +30,14 @@ typedef struct{
     char editora[TAM_STRING];
     int ano;
     int quantidade;
+    int qtdDisponiveis;
     int edicao;//
 }Livros;
 
 typedef struct {
     char nome[TAM_STRING];
     char senha[TAM_SENHA];
+    char meus_livros[MAX_LIVROS];
 }Usuarios;
 
 extern Livros livro[MAX_LIVROS];
