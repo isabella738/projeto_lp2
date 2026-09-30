@@ -11,16 +11,19 @@ Incluir 'settings.h' em um arquivo e o suficiente para que ele reconheca todos e
 
 #define MAX_LIVROS 100
 #define MAX_EXEMPLARES 100
+#define MAX_EMP 5 //max de emprestimos por usuario
 #define TAM_USUARIOS 100
 
 #define TAM_CODIGO 6
 #define TAM_SENHA 8
 #define TAM_STRING 100
 #define ANO_ATUAL 2026
+#define DIAS_EMPRESTIMO 30
 
 #define VOLTAR_LINHA "\033[F\r"
 #define APAGAR_LINHA "\033[2K\r"
 #define VOLTAR_APAGAR "\033[F\r\033[2K\r"
+
 #define CODIGO_PROP "12345" // codigo de acesso do proprietario dps mudar (ou nao k)
 
 typedef struct{
@@ -31,13 +34,20 @@ typedef struct{
     int ano;
     int quantidade;
     int qtdDisponiveis;
-    int edicao;//
+    int edicao;
 }Livros;
+
+typedef struct{
+    char codigo[TAM_CODIGO];
+    int dias_emprestimo;
+    int atrasado; //0 ou 1
+}Emprestimos;
 
 typedef struct {
     char nome[TAM_STRING];
     char senha[TAM_SENHA];
-    char meus_livros[MAX_LIVROS];
+    Emprestimos emprestimo[MAX_EMP];
+    int qtd_emp;
 }Usuarios;
 
 extern Livros livro[MAX_LIVROS];
@@ -45,6 +55,8 @@ extern int total_livros;
 
 extern Usuarios usuario[TAM_USUARIOS];
 extern int total_usuarios;
+extern int user_ativo;
+extern Usuarios *user;
 
 
 #endif

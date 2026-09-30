@@ -121,9 +121,30 @@ int livro_duplicado(Livros l){
     return -1;
 }
 
-void apagar_livro(Livros lista[], int x, int *tam){
+void apagar_livro(Livros vetor[], int x, int *tam){
     for(int i=x; i<(*tam) - 1; i++){
-        lista[i] = lista[i+1];
+        vetor[i] = vetor[i+1];
     }
     (*tam)--;
+}
+
+void apagar_usuario(Usuarios vetor[], int x, int *tam){
+    for(int i=x; i<(*tam) - 1; i++){
+        vetor[i] = vetor[i+1];
+    }
+    (*tam)--;
+}
+
+void imprimir_info_usuario(Usuarios u){
+    int x;
+    for(int i=0; i<u.qtd_emp; i++){
+        if(u.emprestimo[i].atrasado) x++;
+    }
+    printf("Nome: %s\n", u.nome);
+    printf("Emprestimos ativos: %d\n", u.qtd_emp);
+    printf("Emprestimos atrasados: %d\n", x);
+}
+
+void limpar_tela(){
+    printf("\033[1J\033[H");
 }

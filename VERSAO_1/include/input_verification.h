@@ -11,3 +11,7 @@ int ler_codigo(char texto[]);
 int ler_novo_codigo(char codigo[]);
 
 int ler_livro(Livros *livro);
+
+int ler_nova_senha(char senha[]);
+
+int ler_novo_nome(char nome[]);

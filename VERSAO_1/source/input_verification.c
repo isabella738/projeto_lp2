@@ -146,3 +146,47 @@ int ler_livro(Livros *l){//return 1 = sucesso
 
     return 1;
 }
+
+int ler_nova_senha(char senha[]){
+    char s1[TAM_SENHA], s2[TAM_SENHA];
+
+    while(ler_senha(s1));
+    if(string_vazia(s1)) return 0;
+
+    printf("Confirme a senha:\n");
+    do{
+        while(ler_senha(s2));
+        if(string_vazia(s2)) return 0;
+
+        if(strcmp(s1, s2)){
+            printf("As senhas nao coincidem. Tente novamente ou aperte enter para voltars.\n");
+            printf(VOLTAR_LINHA VOLTAR_APAGAR);
+        }
+        else break;
+    }while(1);
+
+    printf(APAGAR_LINHA);
+    strcpy(senha, s1);
+    return 0;
+}
+
+int ler_novo_nome(char nome[]){
+    int repetido = 0;
+
+    while(ler_string(nome, TAM_STRING));
+    if(string_vazia(nome)) return 0;
+
+    for(int i = 0; i < total_usuarios; i++) {
+        if(strcmp(nome, usuario[i].nome)==0) {
+            repetido = 1;
+            break;
+        }
+    }
+    if (repetido) {
+        printf("Ja existe um usuario com esse nome. Tente novamente.\n");
+        printf(VOLTAR_APAGAR);
+        return 1;
+    }
+    return 0;
+    printf(APAGAR_LINHA);
+}

@@ -1,3 +1,5 @@
+#include "settings.h"
+
 int string_vazia(char texto[]);
 
 int sim();//imprime [s/n] e espera um caractere
@@ -25,3 +27,9 @@ void swap_livros(Livros *livro1, Livros *livro2);
 int livro_duplicado(Livros l);//verifica se existe um ja existe um livro com o mesmo titulo, autor, editora, e edicao de 'l' cadastrado no sistema
 
 void apagar_livro(Livros lista[], int x, int *tam);//apaga o livro x de uma lista do tipo Livros
+
+void apagar_usuario(Usuarios users[], int x, int *tam);//apaga o usuario x de uma lista do tipo Usuarios
+
+void imprimir_info_usuario(Usuarios u);//imprime nome, qntd de livros emprestados e de atrasados
+
+void limpar_tela();//limpa a tela do cursor pra cima
