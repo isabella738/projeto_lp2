@@ -16,6 +16,6 @@ int user_ativo = -1;
 Usuarios *user; //ponteiro para o usuario logado atualmente
 /*
     Esse ponteiro serve principalmente para encurtar o nome da estrutura durante o codigo.
-    Visualmente, é muito melhor user->nome do que user[posicao].nome, ainda mais se for acessar
-    uma variavel dentro de outra estrutura, tipo usuario[posicao].emprestimo[x].[...]
+    Visualmente, é muito melhor user->nome do que user[user_ativo].nome, ainda mais se for acessar
+    uma variavel dentro de outra estrutura, tipo usuario[user_ativo].emprestimo[x].[...]
 */
