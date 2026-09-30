@@ -27,7 +27,7 @@ int main(){
                 while(cadastro_usuario());
                 break;
             case 4:
-                printf("Saindo do Sistema...");
+                printf("Saindo do Sistema...\n");
                 return 0;
         }
     }while(1);

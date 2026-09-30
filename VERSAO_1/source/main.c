@@ -20,6 +20,10 @@ Exemplos de uso:
     int escolha;
     while(ler_int(&escolha, 0, 10));
     if(!escolha) return 0;
+
+Obs: nos casos onde nao existem livros ou usuarios cadastrados no sistema, ele imprime uma mensagem
+e volta para o respectivo menu, mas por causa do limpar_tela essa mensagem nunca apareceria. por isso, 
+depois dessas mensagens sempre precisa colocar um VOLTAR_APAGAR, pq ai só apaga oq ta antes da mensagem
 */
 
 #include <stdio.h>
@@ -50,14 +54,12 @@ int listagem(){
         nesta nova variavel. O vetor original fica intacto
     */
 
+    if(sem_livros()) return 0;
+
+    limpar_tela();
     printf("**=======================**\n");
     printf("          LISTAGEM         \n");
     printf("**=======================**\n");
-
-    if(total_livros == 0) {
-        printf("Nenhum livro cadastrado\n");
-        return 0;
-    }
 
     printf("Ordenar por:\n");
     printf("(1) Adicionados recentemente\n");
@@ -129,7 +131,7 @@ int listagem(){
 
     imprimir_lista_livros(lista, total_livros);
 
-    printf("Fazer outra listagem?\n");
+    printf("\nFazer outra listagem?\n");
     if(sim()) return 1;
     return 0;
 }
@@ -145,22 +147,23 @@ int busca(){
         Imprime na tela a medida que for encontrando correspondencias. A lista nao e
         armazenada em nenhum lugar real e é meramente visual
     */
-
+    limpar_tela();
     printf("**=======================**\n");
     printf("           BUSCA           \n");
     printf("**=======================**\n");
 
     int n, contador = 0;
 
-    printf("Buscar por titulo (1), nome do autor (2), editora (3) ou codigo(4)?\n");
+    printf("\nBuscar por titulo (1), nome do autor (2), editora (3) ou codigo(4)?\n");
     while(ler_int(&n, 0, 4));
     if(!n) return 0;
 
     char busca[TAM_STRING]; 
-    printf("Insira sua busca.\n"); 
+    printf("\n----------\nInsira sua busca.\n"); 
 
     while(ler_string(busca, TAM_STRING));
     if(string_vazia(busca)) return 0;
+    printf("\n");
 
     if(n == 4){
         int x = busca_codigo(livro, total_livros, busca);
@@ -193,25 +196,23 @@ int busca(){
     }
     else printf("Foram encontrados %d resultados para esta busca.\n", contador);
 
-    printf("\nRealizar nova busca?");
+    printf("\nRealizar nova busca? ");
     if(sim())return 1;
     return 0;
 }
 
 int consulta(){ // fazer apenas os livros do usuario
+    limpar_tela();
     return 0;
 }
 
 int emprestimo(){
+    if(sem_livros()) return 0;
 
+    limpar_tela();
     printf("**=======================**\n");
     printf("        EMPRESTIMO         \n");
     printf("**=======================**\n");
-
-    if(total_livros == 0){
-        printf("Nao existem livros cadastrados no sistema. Fale com o proprietario para que ele adicione livros.\n");
-        return 0;
-    }
 
     //busca por codigo p ser exato
     int x;
@@ -224,7 +225,7 @@ int emprestimo(){
 
         x = busca_codigo(livro, total_livros, cod);
         
-        if(x < 0) printf("O livro nao existe.\n" VOLTAR_APAGAR);
+        if(x < 0) printf("O livro nao existe." VOLTAR_APAGAR);
 
     }while(x < 0);
     printf(APAGAR_LINHA);
@@ -259,7 +260,7 @@ int emprestimo(){
 }
 
 int devolucao(){
-
+    limpar_tela();
     printf("**=======================**\n");
     printf("         DEVOLUCAO         \n");
     printf("**=======================**\n");
@@ -268,7 +269,7 @@ int devolucao(){
 }
 
 int editar_conta(){
-
+    limpar_tela();
     printf("**=======================**\n");
     printf("      GERENCIAR CONTA      \n");
     printf("**=======================**\n");
@@ -285,6 +286,7 @@ int editar_conta(){
     int x; while(ler_int(&x, 0, 3));
     if(!x) return 0;
 
+    printf("\n-----------------\n");
     int sucesso = 0;
     if(x == 1){
         char novo[TAM_STRING];
@@ -303,7 +305,18 @@ int editar_conta(){
         }
     }
     else if(x == 2){
-        char novo[TAM_SENHA] = {0};
+        char novo[TAM_SENHA] = {0}, confrm[TAM_SENHA];
+
+        printf("Insira a senha atual:\n");
+        do{
+            while(ler_senha(confrm));
+            if(string_vazia(confrm)) return 1;
+
+            if(strcmp(confrm, user->senha)){
+                printf("Senha incorreta. Tente novamente." VOLTAR_APAGAR);
+            }
+        }while(1);
+        printf(APAGAR_LINHA);
         
         printf("Insira a nova senha:\n");
         ler_nova_senha(novo);
@@ -318,7 +331,7 @@ int editar_conta(){
         if(sim()){
             apagar_usuario(usuario, user_ativo, &total_usuarios);
             printf("Acao bem sucedida.\n");
-            return -1;
+            return -1;//volta para a entrada de usuario
         }
     }
 
@@ -338,6 +351,7 @@ int editar_conta(){
 */
 
 int cadastro(){
+    limpar_tela();
     printf("**=======================**\n");
     printf("     CADASTRO DE LIVROS    \n");
     printf("**=======================**\n");
@@ -349,7 +363,7 @@ int cadastro(){
     }
 
     Livros l;
-    printf("Digite as informacões sobre o novo livro:\n");
+    printf("\nDigite as informacões sobre o novo livro:\n");
     if(!ler_livro(&l)) return 0;
     
     int x = livro_duplicado(l);
@@ -365,27 +379,24 @@ int cadastro(){
     if(salvar) {
         livro[total_livros] = l;
         total_livros++;
-        printf("Cadastro realizado com sucesso!");
+        printf("Cadastro realizado com sucesso!\n");
     }
     else {
         printf("Acao cancelada.\n");
     }
 
-    printf("Fazer o cadastro de um novo livro?\n");
+    printf("\nFazer o cadastro de um novo livro?\n");
     if(sim()) return 1;
     return 0;
 }
 
 int editar_livro(){
+    if(sem_livros()) return 0;
+
+    limpar_tela();
     printf("**=======================**\n");
     printf("       EDITAR LIVROS       \n");
     printf("**=======================**\n");
-
-    if(total_livros == 0){
-        printf("Nao existem livros cadastrados no sistema. Digite 1 para iniciar um novo cadastro.\n");
-        printf(VOLTAR_LINHA);
-        return 0;
-    }
 
     char codigo[TAM_CODIGO];
     int x;
@@ -398,7 +409,7 @@ int editar_livro(){
         
         x = busca_codigo(livro, total_livros, codigo);
         if(x < 0){
-            printf("Nao existe um livro cadastrado com este codigo. Tente novamente.\n"VOLTAR_APAGAR);
+            printf("Nao existe um livro cadastrado com este codigo. Tente novamente." VOLTAR_APAGAR);
             continue;
         }
         printf(APAGAR_LINHA);
@@ -407,6 +418,7 @@ int editar_livro(){
 
     //loop para edicoes no livro escolhido
     do{
+        limpar_tela();
         printf("\n------------------\n");
         printf("Livro selecionado:\n"); exibir_info_livro(livro[x]);
 
@@ -418,10 +430,12 @@ int editar_livro(){
         printf("[5] Alterar Edicao\n");
         printf("[6] Ajustar numero de exemplares disponiveis\n");
         printf("[7] Excluir Livro\n");
-        printf("[0] Sair\n\n");
+        printf("[0] Sair\n");
 
         int escolha; while(ler_int(&escolha, 0, 7));
-        if(!escolha) return 0;
+        if(!escolha) break;
+
+        printf("\n-----------------\n");
 
         int sucesso=0;
         char novo[TAM_STRING]; int n;
@@ -459,7 +473,6 @@ int editar_livro(){
 
             livro[x].ano = n;
             sucesso=1;
-
         }
         else if(escolha == 4){//editora
             printf("Nova editora:\n"); while(ler_string(novo, TAM_STRING));
@@ -498,23 +511,24 @@ int editar_livro(){
             if(sim()){
                 apagar_livro(livro, x, &total_livros);
                 printf("Remocao bem sucedida.\n");
-                return 0;
+                return 0;//volta para o menu do proprietario
             }
         }
                     
         if(sucesso) printf("Acao bem sucedida.\n");
         else printf("Acao cancelada.\n");
 
-    }while(1);
+        printf("\nContinuar fazendo alteracoes para o mesmo livro? ");
+    }while(sim());
 
-    printf("Fazer edicoes para outro livro? ");
-    if(sim()) return 1;
-    return 0;
+    return 1;
 }
 
 int vizualizar_emprestimos(){
+    limpar_tela();
 }
 
+//
 /*
     > LOGIN
     Em todas as seguintes funcoes vale a seguinte regra:
@@ -533,7 +547,7 @@ int menu_proprietario() {
     printf("    AREA DO PROPRIETARIO   \n");
     printf("**=======================**\n");  
     printf("\n[1] Cadastrar livro\n[2] Editar livro\n[3] Emprestimos ativos\n[4] Voltar\n");
-    printf("Digite a opcao que deseja:\n");
+    printf("\nDigite a opcao que deseja:\n");
 
     int r;
     while(ler_int(&r, 1, 4));
@@ -560,18 +574,17 @@ int cadastro_usuario() {
     printf("**=======================**\n");
 
     char nome[TAM_STRING], senha[TAM_SENHA] = {0};
-    senha[0] = '\0'; 
 
     if(total_usuarios >= TAM_USUARIOS) { // tirar dps da alocacao dinamica
         printf("Limite de usuarios atingido.\n");
         return 0;
     }
 
-    printf("Digite seu nome:\n"); 
+    printf("\nDigite seu nome:\n"); 
     while(ler_novo_nome(nome));
     if(string_vazia(nome)) return 0;
 
-    printf("Crie uma senha de (%d caracteres):\n", TAM_SENHA-1);
+    printf("\nCrie uma senha de (%d caracteres):\n", TAM_SENHA-1);
     while(ler_nova_senha(senha));
     if(string_vazia(senha)) return 0;
 
@@ -580,7 +593,9 @@ int cadastro_usuario() {
     usuario[total_usuarios].qtd_emp = 0;
     total_usuarios++;
 
-    printf("Cadastrar outro usuario?\n");
+    printf("\nCadastro bem sucedido.\n");
+
+    printf("\nCadastrar outro usuario?\n");
     if(sim()) return 1;
     return 0;
 }
@@ -590,7 +605,7 @@ int menu () {//menu comum
     limpar_tela();
     printf("**=======================**\n");
     printf("           MENU            \n");
-    printf("**=======================**\n");
+    printf("**=======================**\n\n");
     printf("[1] Listagem de livros\n");
     printf("[2] Busca de livros\n");
     printf("[3] Emprestimo\n");
@@ -631,16 +646,23 @@ int menu () {//menu comum
 }
 
 //
-//Entrada de Usuario
+/*
+    ENTRADAD DE USUARIO
+    return 0 = voltar ao menu inicial (allmain)
+    return 1 = login como proprietario
+    return 2 = login como usuario
+    return 3 = cadastro de usuario
+*/
 
 int entrada_usuario() {
     int resposta;
     while(ler_int(&resposta, 1, 4));
-
+    
     if(resposta == 1) { // proprietario
         char prop[TAM_CODIGO];
 
         //Loop de validacao do codigo de acesso
+        printf("\n--------------\n");
         printf("Digite o codigo de acesso:\n");
         do {
             while(ler_codigo(prop));
@@ -652,21 +674,18 @@ int entrada_usuario() {
 
             printf("Codigo invalido, deseja tentar novamente? ");
             if(!sim()) return 0;
-            printf(VOLTAR_LINHA VOLTAR_LINHA APAGAR_LINHA);
+            printf(VOLTAR_LINHA APAGAR_LINHA VOLTAR_LINHA APAGAR_LINHA);
         } while (1);
         printf(APAGAR_LINHA);
 
     } else if (resposta == 2) { //login usuario
         char nome[TAM_STRING], senha[TAM_SENHA];
 
-        if (total_usuarios <= 0) {
-            printf("Nao exitem usuarios cadastrados. Entre como proprietario ou inicie um novo 2cadastro.\n");
-            printf(VOLTAR_LINHA);//isso garante que a mensagem apareca mesmo quando a tela for limpa no main
-            return 0; 
-        }
+        if(sem_usuarios()) return 0;
 
         //
         //Leitura do nome
+        printf("\n--------------\n");
         printf("Digite seu nome (ou deixe vazio para cancelar):\n"); 
         while(ler_string(nome, TAM_STRING));
         if(string_vazia(nome)) return 0;
@@ -689,8 +708,8 @@ int entrada_usuario() {
         //
         //Validacao da senha
         int tent = 0;
+        printf("Digite sua senha (ou deixe vazio para cancelar):\n");
         while(tent < 3) {
-            printf("Digite sua senha (ou deixe vazio para cancelar):\n");
             while(ler_senha(senha));
             if(string_vazia(senha)) return 0;
 
@@ -699,8 +718,9 @@ int entrada_usuario() {
             }
 
             tent++;
-            printf("Senha incorreta. Tentativas restantes: %d\n", 3 - tent);
+            printf("Senha incorreta. Tentativas restantes: %d"VOLTAR_APAGAR, 3 - tent);
         }
+        printf(APAGAR_LINHA);
 
         if(tent >= 3){ 
             printf("Numero maximo de tentativas excedido.\n");

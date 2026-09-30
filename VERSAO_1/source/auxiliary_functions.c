@@ -92,11 +92,12 @@ void exibir_info_livro(Livros livro){
 }
 
 void exibir_info_rapida(Livros livro){
-    printf("(%s) %s - %s\n", livro.codigo, livro.titulo, livro.autor);
+    printf("[%s] %s - %s\n", livro.codigo, livro.titulo, livro.autor);
 }
 
 void imprimir_lista_livros(Livros vetor[], int max){
     for(int i=0; i<max; i++){
+        printf("\n");
         exibir_info_rapida(vetor[i]);
     }
 }
@@ -114,9 +115,8 @@ int livro_duplicado(Livros l){
         if(strcmp_noCS(l.titulo, livro[i].titulo) == 0) correspondencias++;
         if(strcmp_noCS(l.autor, livro[i].autor) == 0) correspondencias++;
         if(strcmp_noCS(l.editora, livro[i].editora) == 0) correspondencias++;
-        if(l.edicao == livro[i].edicao) correspondencias++;
 
-        if(correspondencias == 4) return i;
+        if(correspondencias == 3) return i;
     }
     return -1;
 }
@@ -147,4 +147,20 @@ void imprimir_info_usuario(Usuarios u){
 
 void limpar_tela(){
     printf("\033[1J\033[H");
+}
+
+int sem_livros(){
+    if(total_livros == 0){
+        printf("Voce nao pode realizar esta acao pois nao existem livros cadastrados no sistema." VOLTAR_APAGAR);
+        return 1;
+    }
+    return 0;
+}
+
+int sem_usuarios(){
+    if(total_usuarios == 0){
+        printf("Voce nao pode realizar esta acao pois nao existem usuarios cadastrados no sistema." VOLTAR_APAGAR);
+        return 1;
+    }
+    return 0;
 }

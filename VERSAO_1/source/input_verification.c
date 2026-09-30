@@ -115,24 +115,24 @@ int ler_livro(Livros *l){//return 1 = sucesso
     char titulo[TAM_STRING], autor[TAM_STRING], editora[TAM_STRING], codigo[TAM_CODIGO];
     int ano, quantidade, edicao;
 
-    printf("Titulo do livro:\n"); while(ler_string(titulo, TAM_STRING)); 
+    printf("\nTitulo do livro:\n"); while(ler_string(titulo, TAM_STRING)); 
     if(string_vazia(titulo)) return 0;
 
-    printf("Nome do autor:\n"); while(ler_string(autor, TAM_STRING)); 
+    printf("\nNome do autor:\n"); while(ler_string(autor, TAM_STRING)); 
     if(string_vazia(autor)) return 0;
 
-    printf("Editora:\n"); while(ler_string(editora, TAM_STRING)); 
+    printf("\nEditora:\n"); while(ler_string(editora, TAM_STRING)); 
     if(string_vazia(editora)) return 0;
 
-    printf("Ano de publicacao:\n"); while(ler_int(&ano, 0, ANO_ATUAL));
+    printf("\nAno de publicacao:\n"); while(ler_int(&ano, 0, ANO_ATUAL));
     if(!ano) return 0;
 
-    printf("Edicao:\n"); while(ler_int(&edicao, 0, 100));
+    printf("\nEdicao:\n"); while(ler_int(&edicao, 0, 100));
     if(!edicao) return 0;
 
-    printf("Numero de exemplares disponiveis:\n"); while(ler_int(&quantidade, 0, MAX_EXEMPLARES));
+    printf("\nNumero de exemplares disponiveis:\n"); while(ler_int(&quantidade, 0, MAX_EXEMPLARES));
 
-    printf("Codigo:\n"); while(ler_novo_codigo(codigo)); 
+    printf("\nCodigo:\n"); while(ler_novo_codigo(codigo)); 
     if(string_vazia(codigo)) return 0;
 
     // salvar tudo
@@ -153,7 +153,8 @@ int ler_nova_senha(char senha[]){
     while(ler_senha(s1));
     if(string_vazia(s1)) return 0;
 
-    printf("Confirme a senha:\n");
+    printf(VOLTAR_LINHA VOLTAR_APAGAR);
+    printf("Confirme a senha:\n" APAGAR_LINHA);
     do{
         while(ler_senha(s2));
         if(string_vazia(s2)) return 0;
@@ -183,7 +184,7 @@ int ler_novo_nome(char nome[]){
         }
     }
     if (repetido) {
-        printf("Ja existe um usuario com esse nome. Tente novamente.\n");
+        printf("Ja existe um usuario com esse nome. Tente novamente.");
         printf(VOLTAR_APAGAR);
         return 1;
     }
