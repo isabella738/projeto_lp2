@@ -80,27 +80,26 @@ int listagem(){
         for(int i=0; i<total_livros; i++){
             for(int j=i+1; j<total_livros; j++){
 
-                char string1[strlen(lista[i].titulo)], string2[strlen(lista[i].titulo)];
-                int soma1=0, soma2=0;
+                char string1[strlen(lista[i].titulo)+1], string2[strlen(lista[j].titulo)+1];
+                int a=0, b=0;
 
                 strcpy(string1, lista[i].titulo); letras_minusculas(string1);
                 strcpy(string2, lista[j].titulo); letras_minusculas(string2);
 
                 for(int k=0; k<strlen(string1) && k<strlen(string2); k++){
-                    soma1 += string1[k];
-                    soma2 += string2[k];
-
-                    if(soma1 != soma2) break;
+                    if(string1[k] != string2[k]){ //a primeira ocorrencia de divergencia de caracteres entre as duas strings
+                        a = string1[k]; b = string2[k];
+                        break;
+                    }
                 }
 
-                if(soma1 > soma2 || (soma1 == soma2 && strlen(string2) < strlen(string1))){
+                if(b < a || (a == b && strlen(string2) < strlen(string1))){
                     /*
                         Ou seja:
-                        Se a "soma" dos primeiros caracteres de string 2 for menor que de string1,
-                        ou as somas são iguais, mas string2 é menor que string1 (substring), a 
-                        string2 vai estar alfabeticamente antes de string1
+                        Se o caractere b vir antes do a, a string2 vem antes de string1
+                        Ou então, se não houver divergencias entre string1 e string2, mas a segunda
+                        for menor que a primeira (substring), então ela vem antes
                     */
-
                     swap_livros(&lista[i], &lista[j]);
                 }
             }
@@ -129,11 +128,13 @@ int listagem(){
         }
     }
 
-    imprimir_lista_livros(lista, total_livros);
+    do{
+        limpar_tela();
+        imprimir_lista_livros(lista, total_livros);
 
-    printf("\nFazer outra listagem?\n");
-    if(sim()) return 1;
-    return 0;
+    }while(busca_rapida());
+    
+    return 1;
 }
 
 int busca(){
@@ -143,35 +144,35 @@ int busca(){
         - Autor
         - Editora
         - Codigo
-
-        Imprime na tela a medida que for encontrando correspondencias. A lista nao e
-        armazenada em nenhum lugar real e é meramente visual
     */
+
     limpar_tela();
     printf("**=======================**\n");
     printf("           BUSCA           \n");
     printf("**=======================**\n");
 
     int n, contador = 0;
+    int indices[total_livros]; //guarda o indice do livro que corresponder à busca p facilitar a impressao depois
+    char busca[TAM_STRING]; 
 
-    printf("\nBuscar por titulo (1), nome do autor (2), editora (3) ou codigo(4)?\n");
+    printf("\nBuscar por titulo (1), nome do autor (2), editora (3) ou codigo (4)?\n");
     while(ler_int(&n, 0, 4));
     if(!n) return 0;
 
-    char busca[TAM_STRING]; 
     printf("\n----------\nInsira sua busca.\n"); 
 
+    //Leitura do codigo (exibe 1 unico resultado)
+    if(n == 4){
+        busca_rapida();
+        return 1;
+    }
+
+    //Leitura de uma busca generica
     while(ler_string(busca, TAM_STRING));
     if(string_vazia(busca)) return 0;
     printf("\n");
 
-    if(n == 4){
-        int x = busca_codigo(livro, total_livros, busca);
-        if(x >= 0) exibir_info_livro(livro[x]);
-        else printf("Nao foram encontrados livros com este codigo.\n");
-        return 1;
-    }
-
+    //Busca de fato
     for(int i=0; i<total_livros; i++){
         int achou = 0;
 
@@ -182,23 +183,31 @@ int busca(){
                 achou = strstr_noCS(livro[i].autor, busca); break;
             case 3:
                 achou = strstr_noCS(livro[i].editora, busca); break;
-            case 4: 
         }
         
         if(achou){
+            indices[contador] = i;
             contador++;
-            exibir_info_rapida(livro[i]);
         }
     }
 
+    //Exibição dos resutlados
     if(!contador){
         printf("Nao foram encontrados resultados para esta busca.\n");
+        pausa();
     }
-    else printf("Foram encontrados %d resultados para esta busca.\n", contador);
+    else{ 
+        do{
+            limpar_tela();
+            printf("Foram encontrados %d resultados para esta busca:\n\n", contador);
+        
+            for(int i=0; i<contador; i++){
+                exibir_info_rapida(livro[indices[i]]);
+            }
+        }while(busca_rapida());
+    }
 
-    printf("\nRealizar nova busca? ");
-    if(sim())return 1;
-    return 0;
+    return 1;
 }
 
 int consulta(){ // fazer apenas os livros do usuario
@@ -217,18 +226,11 @@ int emprestimo(){
 
     //busca por codigo p ser exato
     int x;
-    printf("\nDigite o codigo do livro desejado:\n");
     char cod[TAM_CODIGO];
+    printf("\nDigite o codigo do livro desejado:\n");
 
-    do{
-        while(ler_codigo(cod));
-        if(string_vazia(cod)) return 0;
-
-        x = busca_codigo(livro, total_livros, cod);
-        
-        if(x < 0) printf("O livro nao existe." VOLTAR_APAGAR);
-
-    }while(x < 0);
+    ler_codigo_existente(cod, &x);
+    if(string_vazia(cod)) return 0;
     printf(APAGAR_LINHA);
 
     //agora q achou vai pegar emprestado
@@ -239,10 +241,10 @@ int emprestimo(){
         printf("\nDeseja fazer um empréstimo? "); 
         
         if(sim()){
-            livro[x].qtdDisponiveis = livro[x].qtdDisponiveis - 1;
+            livro[x].qtdDisponiveis --;
             
-            int *q = &usuario[user_ativo].qtd_emp;
-            Emprestimos *e = &usuario[user_ativo].emprestimo[*q]; //só pra encurtar o nome nas proximas linhas
+            int *q = &user->qtd_emp;
+            Emprestimos *e = &user->emprestimo[*q]; //só pra encurtar o nome nas proximas linhas
 
             strcpy(e->codigo, livro[x].codigo);
             e->prazo = DIAS_EMPRESTIMO;
@@ -251,13 +253,14 @@ int emprestimo(){
 
             printf("\nEmprestimo realizado com sucesso!\n");
         }else{
-            return 0;
+            return 1;
         }
     }else{
         printf("\nNao ha exemplares disponiveis no momento.");
     }
 
-    return 0;
+    pausa();
+    return 1;
 }
 
 int devolucao(){
@@ -372,9 +375,9 @@ int cadastro(){
     int salvar = 1;
 
     if(x >= 0){
-        printf("Encontramos um livro ja cadastrado com informacoes semelhantes a este:\n");
+        printf("\nAtencao: encontramos um livro ja cadastrado no sistema com informacoes semelhantes a este:\n");
         exibir_info_livro(livro[x]);
-        printf("Deseja cadastrar mesmo assim? ");
+        printf("\nDeseja continuar mesmo assim? ");
         salvar = sim();
     }
 
@@ -403,20 +406,9 @@ int editar_livro(){
     char codigo[TAM_CODIGO];
     int x;
     printf("Insira o código do livro: \n"); 
-    
-    //loop para escolha de um livro
-    do{
-        while(ler_codigo(codigo));
-        if(string_vazia(codigo)) return 0;
-        
-        x = busca_codigo(livro, total_livros, codigo);
-        if(x < 0){
-            printf("Nao existe um livro cadastrado com este codigo. Tente novamente." VOLTAR_APAGAR);
-            continue;
-        }
-        printf(APAGAR_LINHA);
-
-    }while(x < 0);
+    ler_codigo_existente(codigo, &x);
+    if(string_vazia(codigo)) return 0;
+    printf(APAGAR_LINHA);
 
     //loop para edicoes no livro escolhido
     do{

@@ -1,13 +1,16 @@
 /*
 
-Estas funcoes fazem pequenas verificacoes/acoes curtas e objetivas, somente para auxiliar.
-Sao genericas e nao exibem mensagem de erro.
+Estas funcoes fazem pequenas verificacoes/ações curtas e objetivas, somente para auxiliar.
+Sao genericas, portanto, quando possivel, não devem usar as variaveis globais diretamente.
 
 */
 
 #include <stdio.h>
 #include <string.h>
 #include "settings.h"
+
+//
+//De texto e de estetica do terminal
 
 int sim(){
     printf("[s/n] ");
@@ -74,12 +77,17 @@ int strstr_noCS(char string1[], char string2[]){
     return strstr(novo1, novo2) != NULL;
 }
 
-int busca_codigo(Livros lista[], int tam, char codigo[]){
-    for(int i=0; i<tam; i++){
-        if(strcmp(lista[i].codigo, codigo) == 0) return i;
-    }
-    return -1;
+void pausa(){
+    printf("\nPressione qualquer tecla para continuar.\n");
+    char c[100]; fgets(c, 100, stdin); //tamanho grande p tentar não dar estouro de buffer
 }
+
+void limpar_tela(){
+    printf("\033[1J\033[H");
+}
+
+//
+//De impressão de informações
 
 void exibir_info_livro(Livros livro){
     printf("Titulo: %s\n", livro.titulo);
@@ -88,7 +96,7 @@ void exibir_info_livro(Livros livro){
     printf("Editora: %s\n", livro.editora);
     printf("Ano de publicacao: %d\n", livro.ano);
     printf("Edicao: %da\n", livro.edicao);
-    printf("Exemplares disponiveis: %d\n", livro.quantidade);
+    printf("Exemplares disponiveis: %d\n", livro.qtdDisponiveis);
 }
 
 void exibir_info_rapida(Livros livro){
@@ -102,11 +110,16 @@ void imprimir_lista_livros(Livros vetor[], int max){
     }
 }
 
-void swap_livros(Livros *livro1, Livros *livro2){
-    Livros temp = *livro1;
-    *livro1 = *livro2;
-    *livro2 = temp;
+void imprimir_info_usuario(Usuarios u){
+    printf("Nome: %s\n", u.nome);
+    printf("Emprestimos ativos: %d\n", u.qtd_emp);
+    printf("Emprestimos atrasados: %d\n", qtd_atrasos(u));
+    printf("Situacao da conta: ");
+    u.suspenso ? printf("suspensa.\n") : printf("regular.\n");
 }
+
+//
+//Booleanos
 
 int livro_duplicado(Livros l){
     for(int i=0; i<total_livros; i++){
@@ -119,32 +132,6 @@ int livro_duplicado(Livros l){
         if(correspondencias == 3) return i;
     }
     return -1;
-}
-
-void apagar_livro(Livros vetor[], int x, int *tam){
-    for(int i=x; i<(*tam) - 1; i++){
-        vetor[i] = vetor[i+1];
-    }
-    (*tam)--;
-}
-
-void apagar_usuario(Usuarios vetor[], int x, int *tam){
-    for(int i=x; i<(*tam) - 1; i++){
-        vetor[i] = vetor[i+1];
-    }
-    (*tam)--;
-}
-
-void imprimir_info_usuario(Usuarios u){
-    printf("Nome: %s\n", u.nome);
-    printf("Emprestimos ativos: %d\n", u.qtd_emp);
-    printf("Emprestimos atrasados: %d\n", qtd_atrasos(u));
-    printf("Situacao da conta: ");
-    u.suspenso ? printf("suspensa.\n") : printf("regular.\n");
-}
-
-void limpar_tela(){
-    printf("\033[1J\033[H");
 }
 
 int sem_livros(){
@@ -162,6 +149,41 @@ int sem_usuarios(){
     }
     return 0;
 }
+
+int usuario_bloqueado(Usuarios u){
+    if(u.suspenso){
+        printf("Voce alcancou o limite toleravel de devolucoes atrasadas. Voce esta bloqueado de realizar esta acao ate resolver suas pendencias.");
+        printf(VOLTAR_APAGAR);
+        return 1;
+    }
+    return 0;
+}
+
+//
+//Relacionados ao vetor
+
+void apagar_livro(Livros vetor[], int x, int *tam){
+    for(int i=x; i<(*tam) - 1; i++){
+        vetor[i] = vetor[i+1];
+    }
+    (*tam)--;
+}
+
+void apagar_usuario(Usuarios vetor[], int x, int *tam){
+    for(int i=x; i<(*tam) - 1; i++){
+        vetor[i] = vetor[i+1];
+    }
+    (*tam)--;
+}
+
+void swap_livros(Livros *livro1, Livros *livro2){
+    Livros temp = *livro1;
+    *livro1 = *livro2;
+    *livro2 = temp;
+}
+
+//
+//Outros
 
 void passagem_de_tempo(){
     int dias = (dia_de_hoje - ultimo_dia)/(3600*24);
@@ -190,11 +212,24 @@ int qtd_atrasos(Usuarios u){
     return q;
 }
 
-int usuario_bloqueado(Usuarios u){
-    if(u.suspenso){
-        printf("Voce alcancou o limite toleravel de devolucoes atrasadas. Voce esta bloqueado de realizar esta acao ate resolver suas pendencias.");
-        printf(VOLTAR_APAGAR);
-        return 1;
+int busca_codigo(Livros lista[], int tam, char codigo[]){
+    for(int i=0; i<tam; i++){
+        if(strcmp(lista[i].codigo, codigo) == 0) return i;
     }
-    return 0;
+    return -1;
+}
+
+int busca_rapida(){
+    printf("\nInsira um codigo para ver mais detalhes ou deixe vazio para cancelar.\n");
+
+    char codigo[TAM_CODIGO];
+    int i;
+    while(ler_codigo_existente(codigo, &i));
+    if(string_vazia(codigo)) return 0;
+
+    limpar_tela();
+    exibir_info_livro(livro[i]);
+    pausa();
+    
+    return 1;
 }

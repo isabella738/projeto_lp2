@@ -43,3 +43,7 @@ void passagem_de_tempo();
 int qtd_atrasos(Usuarios u);
 
 int usuario_bloqueado(Usuarios u);
+
+void pausa();
+
+int busca_rapida();//le um codigo, verifica se existe, limpa a tela e exibe informações integrais do livro

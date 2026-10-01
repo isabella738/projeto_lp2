@@ -92,6 +92,20 @@ int ler_codigo(char string[]){
     return 0;
 }
 
+int ler_codigo_existente(char string[], int *i){
+    while(ler_codigo(string));
+    if(string_vazia(string))return 0;
+
+    int x = busca_codigo(livro, total_livros, string);
+
+    if(x < 0){
+        printf("Nao existe livro com este codigo." VOLTAR_APAGAR);
+        return 1;
+    }
+    (*i) = x;
+    return 0;
+}
+
 int ler_senha(char senha[]) { 
     if(ler_string(senha, TAM_SENHA)) return 1;
     printf(APAGAR_LINHA);
@@ -143,6 +157,7 @@ int ler_livro(Livros *l){//return 1 = sucesso
     l->ano = ano;
     l->edicao = edicao;
     l->quantidade = quantidade;
+    l->qtdDisponiveis = quantidade;
 
     return 1;
 }

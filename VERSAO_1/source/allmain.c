@@ -13,9 +13,9 @@ int main(){
         limpar_tela();
         printf("Biblioteca [INSIRA UM NOME MANEIRO AQUI]\n\n");
 
-        printf("Entrar como:\n");
-        printf("[1] Proprietário\n");
-        printf("[2] Usuario\n");
+        printf("Escolha uma acao:\n");
+        printf("[1] Entrar como Proprietário\n");
+        printf("[2] Entrar como Usuario\n");
         printf("[3] Cadastrar novo usuario\n");
         printf("[4] Sair\n\n");
 

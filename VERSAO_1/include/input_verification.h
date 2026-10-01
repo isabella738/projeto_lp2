@@ -8,6 +8,8 @@ int ler_int(int *inteiro, int min, int max);
 
 int ler_codigo(char texto[]);
 
+int ler_codigo_existente(char string[], int *i);//junta as funcoes 'ler codigo' e 'busca codigo'
+
 int ler_novo_codigo(char codigo[]);
 
 int ler_livro(Livros *livro);
