@@ -1,9 +1,14 @@
 #include <stdio.h>
+#include <time.h>
 #include "main.h"
 #include "auxiliary_functions.h"
 #include "settings.h"
 
 int main(){
+    
+    time(&dia_de_hoje);
+    passagem_de_tempo();
+
     do{
         limpar_tela();
         printf("Biblioteca [INSIRA UM NOME MANEIRO AQUI]\n\n");

@@ -136,13 +136,11 @@ void apagar_usuario(Usuarios vetor[], int x, int *tam){
 }
 
 void imprimir_info_usuario(Usuarios u){
-    int x;
-    for(int i=0; i<u.qtd_emp; i++){
-        if(u.emprestimo[i].atrasado) x++;
-    }
     printf("Nome: %s\n", u.nome);
     printf("Emprestimos ativos: %d\n", u.qtd_emp);
-    printf("Emprestimos atrasados: %d\n", x);
+    printf("Emprestimos atrasados: %d\n", qtd_atrasos(u));
+    printf("Situacao da conta: ");
+    u.suspenso ? printf("suspensa.\n") : printf("regular.\n");
 }
 
 void limpar_tela(){
@@ -160,6 +158,42 @@ int sem_livros(){
 int sem_usuarios(){
     if(total_usuarios == 0){
         printf("Voce nao pode realizar esta acao pois nao existem usuarios cadastrados no sistema." VOLTAR_APAGAR);
+        return 1;
+    }
+    return 0;
+}
+
+void passagem_de_tempo(){
+    int dias = (dia_de_hoje - ultimo_dia)/(3600*24);
+
+    for(int i=0; i<total_usuarios; i++){
+        int x=0;
+        for(int j=0; j<usuario[i].qtd_emp; j++){
+
+            if((usuario[i].emprestimo[j].prazo -= dias) <= 0){
+                usuario[i].emprestimo[j].atrasado = 1;
+                x++;
+            }
+
+        }
+
+        if(x >= LIM_ATRASOS) usuario[i].suspenso = 1;
+        else if(x == 0) usuario[i].suspenso = 0;
+    }
+}
+
+int qtd_atrasos(Usuarios u){
+    int q=0;
+    for(int i=0; i< u.qtd_emp; i++){
+        if(u.emprestimo[i].atrasado) q++;
+    }
+    return q;
+}
+
+int usuario_bloqueado(Usuarios u){
+    if(u.suspenso){
+        printf("Voce alcancou o limite toleravel de devolucoes atrasadas. Voce esta bloqueado de realizar esta acao ate resolver suas pendencias.");
+        printf(VOLTAR_APAGAR);
         return 1;
     }
     return 0;

@@ -1,6 +1,7 @@
 //Declaracao das principais variaveis do programa
 
 #include "settings.h"
+#include <time.h>
 
 Livros livro[MAX_LIVROS];
 
@@ -19,3 +20,6 @@ Usuarios *user; //ponteiro para o usuario logado atualmente
     Visualmente, é muito melhor user->nome do que user[user_ativo].nome, ainda mais se for acessar
     uma variavel dentro de outra estrutura, tipo usuario[user_ativo].emprestimo[x].[...]
 */
+
+//
+time_t dia_de_hoje = 0, ultimo_dia = 0;

@@ -37,3 +37,9 @@ void limpar_tela();//limpa a tela do cursor pra cima
 int sem_livros();
 
 int sem_usuarios();
+
+void passagem_de_tempo();
+
+int qtd_atrasos(Usuarios u);
+
+int usuario_bloqueado(Usuarios u);

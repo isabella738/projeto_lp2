@@ -208,6 +208,7 @@ int consulta(){ // fazer apenas os livros do usuario
 
 int emprestimo(){
     if(sem_livros()) return 0;
+    if(usuario_bloqueado(*user)) return 0;
 
     limpar_tela();
     printf("**=======================**\n");
@@ -216,7 +217,7 @@ int emprestimo(){
 
     //busca por codigo p ser exato
     int x;
-    printf("\nDigite o codigo do livro desejado: ");
+    printf("\nDigite o codigo do livro desejado:\n");
     char cod[TAM_CODIGO];
 
     do{
@@ -244,7 +245,7 @@ int emprestimo(){
             Emprestimos *e = &usuario[user_ativo].emprestimo[*q]; //só pra encurtar o nome nas proximas linhas
 
             strcpy(e->codigo, livro[x].codigo);
-            e->dias_emprestimo = DIAS_EMPRESTIMO;
+            e->prazo = DIAS_EMPRESTIMO;
             e->atrasado = 0;
             (*q)++;
 
@@ -315,6 +316,7 @@ int editar_conta(){
             if(strcmp(confrm, user->senha)){
                 printf("Senha incorreta. Tente novamente." VOLTAR_APAGAR);
             }
+            else break;
         }while(1);
         printf(APAGAR_LINHA);
         
@@ -591,6 +593,7 @@ int cadastro_usuario() {
     strcpy(usuario[total_usuarios].nome, nome);
     strcpy(usuario[total_usuarios].senha, senha);
     usuario[total_usuarios].qtd_emp = 0;
+    usuario[total_usuarios].suspenso = 0;
     total_usuarios++;
 
     printf("\nCadastro bem sucedido.\n");
@@ -603,6 +606,10 @@ int cadastro_usuario() {
 int menu () {//menu comum
 
     limpar_tela();
+    
+    printf("Seja bem vindo(a) %s\n", user->nome);
+    printf("Voce tem %d pendencias.\n\n", qtd_atrasos(*user));
+
     printf("**=======================**\n");
     printf("           MENU            \n");
     printf("**=======================**\n\n");
@@ -614,7 +621,7 @@ int menu () {//menu comum
     printf("[6] Gerenciar conta\n");
     printf("[0] Sair\n\n");
     
-    printf("Digite a opcao que deseja: ");
+    printf("Digite a opcao que deseja:\n");
     int r; while(ler_int(&r, 0, 6));
     switch(r) {
         case 1:
@@ -647,7 +654,7 @@ int menu () {//menu comum
 
 //
 /*
-    ENTRADAD DE USUARIO
+    ENTRADA DE USUARIO
     return 0 = voltar ao menu inicial (allmain)
     return 1 = login como proprietario
     return 2 = login como usuario
@@ -657,6 +664,9 @@ int menu () {//menu comum
 int entrada_usuario() {
     int resposta;
     while(ler_int(&resposta, 1, 4));
+    printf("\033[0J");//limpa tudo oq estiver abaixo do cursor, sem move-lo. 
+    //algumas mensagens de erro, tipo de tentativas excedidas sao impressas muito embaixo e nao é apagada
+    //depois de modo convencional, por isso apagar a tela aqui
     
     if(resposta == 1) { // proprietario
         char prop[TAM_CODIGO];
@@ -680,6 +690,7 @@ int entrada_usuario() {
 
     } else if (resposta == 2) { //login usuario
         char nome[TAM_STRING], senha[TAM_SENHA];
+        int posicao = -1;
 
         if(sem_usuarios()) return 0;
 
@@ -687,28 +698,28 @@ int entrada_usuario() {
         //Leitura do nome
         printf("\n--------------\n");
         printf("Digite seu nome (ou deixe vazio para cancelar):\n"); 
-        while(ler_string(nome, TAM_STRING));
-        if(string_vazia(nome)) return 0;
+        do{
+            while(ler_string(nome, TAM_STRING));
+            if(string_vazia(nome)) return 0;
 
-        int posicao = -1;
-
-        for(int i = 0; i < total_usuarios; i++) {
-            if(strcmp(nome, usuario[i].nome) == 0) {
-                posicao = i;
-                break;
+            for(int i = 0; i < total_usuarios; i++) {
+                if(strcmp(nome, usuario[i].nome) == 0) {
+                    posicao = i;
+                    break;
+                }
             }
-        }
 
-        if(posicao == -1) {
-            printf("Usuario nao existe\n" VOLTAR_APAGAR);
-            printf(VOLTAR_LINHA);
-            return 0;
-        }
+            if(posicao == -1) {
+                printf("Usuario nao existe." VOLTAR_APAGAR);
+            }
+            else break;
+        }while(1);
+        printf(APAGAR_LINHA);
 
         //
         //Validacao da senha
         int tent = 0;
-        printf("Digite sua senha (ou deixe vazio para cancelar):\n");
+        printf("\nDigite sua senha (ou deixe vazio para cancelar):\n");
         while(tent < 3) {
             while(ler_senha(senha));
             if(string_vazia(senha)) return 0;
@@ -724,17 +735,15 @@ int entrada_usuario() {
 
         if(tent >= 3){ 
             printf("Numero maximo de tentativas excedido.\n");
-            printf(VOLTAR_LINHA);
+            printf(APAGAR_LINHA VOLTAR_LINHA VOLTAR_APAGAR);
             return 0;
         }
         else{
             user_ativo = posicao;
             user = &usuario[user_ativo];
-
-            limpar_tela();
-            printf("Seja bem vindo(a) %s\n", user->nome);
         }
     }
 
     return resposta;
 }
+
