@@ -8,6 +8,7 @@ Sao genericas, portanto, quando possivel, não devem usar as variaveis globais d
 #include <stdio.h>
 #include <string.h>
 #include "settings.h"
+#include "input_verification.h"
 
 //
 //De texto e de estetica do terminal
@@ -110,6 +111,14 @@ void imprimir_lista_livros(Livros vetor[], int max){
     }
 }
 
+int qtd_atrasos(Usuarios u){
+    int q=0;
+    for(int i=0; i< u.qtd_emp; i++){
+        if(u.emprestimo[i].atrasado) q++;
+    }
+    return q;
+}
+
 void imprimir_info_usuario(Usuarios u){
     printf("Nome: %s\n", u.nome);
     printf("Emprestimos ativos: %d\n", u.qtd_emp);
@@ -204,13 +213,13 @@ void passagem_de_tempo(){
     }
 }
 
-int qtd_atrasos(Usuarios u){
+/*int qtd_atrasos(Usuarios u){
     int q=0;
     for(int i=0; i< u.qtd_emp; i++){
         if(u.emprestimo[i].atrasado) q++;
     }
     return q;
-}
+}*/
 
 int busca_codigo(Livros lista[], int tam, char codigo[]){
     for(int i=0; i<tam; i++){
