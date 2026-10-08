@@ -26,6 +26,7 @@ Incluir 'settings.h' em um arquivo e o suficiente para que ele reconheca todos e
 #define ANO_ATUAL 2026
 #define DIAS_EMPRESTIMO 30
 #define CODIGO_PROP "12345" // codigo de acesso do proprietario dps mudar (ou nao k)
+#define LIM_EMPRESTIMOS 5
 
 //Edição de texto
 #define VOLTAR_LINHA "\033[F\r"

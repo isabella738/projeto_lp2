@@ -237,7 +237,7 @@ int emprestimo(){
     printf("\nLivro encontrado!\n\n");
     exibir_info_livro(livro[x]);
 
-    if(livro[x].qtdDisponiveis > 0){
+    if(livro[x].qtdDisponiveis > 0 && user->qtd_emp < LIM_EMPRESTIMOS){//compara lim_emprestimos p n acessar posicao inexistente
         printf("\nDeseja fazer um empréstimo? "); 
         
         if(sim()){
@@ -249,12 +249,14 @@ int emprestimo(){
             strcpy(e->codigo, livro[x].codigo);
             e->prazo = DIAS_EMPRESTIMO;
             e->atrasado = 0;
-            (*q)++;
+            (*q)++;//incrementa a posicao disponivel pro proximo emprestimo
 
             printf("\nEmprestimo realizado com sucesso!\n");
         }else{
             return 1;
         }
+    }else if(user->qtd_emp >= LIM_EMPRESTIMOS){
+        printf("\nVoce atingiu o limite de emprestimos.\nFaca uma devolucao.");
     }else{
         printf("\nNao ha exemplares disponiveis no momento.");
     }
