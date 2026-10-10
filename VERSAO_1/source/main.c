@@ -271,7 +271,21 @@ int devolucao(){
     printf("         DEVOLUCAO         \n");
     printf("**=======================**\n");
 
-    return 0;
+    //to usando o codespace no tablet pq o pc deu pau mas eh uma bos ta
+    
+    //listagem meus livros
+    //digite o codigo o livro a ser devolvido:
+    //compara com os codigos da lista
+    //y = posicao_codigo_minhaLista;
+    //livro[y].qtdDisponiveis++;
+    //user->emprestimo[y]=0;
+    //for(int i=y; i<LIM_EMPRESTIMOS; i++){
+    //reorganiza a lista de emprestimo p n ficar buraco em y
+    //}
+    //printf("Devolucao concluida com sucesso!");
+
+    pausa();
+    return 1;
 }
 
 int editar_conta(){
