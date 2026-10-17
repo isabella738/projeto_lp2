@@ -46,6 +46,7 @@ typedef struct{
 
 typedef struct{
     char codigo[TAM_CODIGO];
+    time_t tempo_inicio;
     int prazo;
     int atrasado; //0 ou 1
 }Emprestimos;
@@ -53,9 +54,9 @@ typedef struct{
 typedef struct {
     char nome[TAM_STRING];
     char senha[TAM_SENHA];
-    Emprestimos emprestimo[MAX_EMP];
     int qtd_emp;
     int suspenso;//0 ou 1. usuario fica bloqueado de fazer pegar novos livros ate quitar seus atrasos
+    Emprestimos emprestimo[MAX_EMP];
 }Usuarios;
 
 extern Livros livro[MAX_LIVROS];
@@ -64,6 +65,6 @@ extern Usuarios usuario[TAM_USUARIOS];
 extern int total_usuarios;
 extern int user_ativo;
 extern Usuarios *user;
-extern time_t dia_de_hoje, ultimo_dia;
+extern time_t dia_de_hoje;
 
 #endif

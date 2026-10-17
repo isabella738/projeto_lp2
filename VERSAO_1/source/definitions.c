@@ -22,4 +22,4 @@ Usuarios *user; //ponteiro para o usuario logado atualmente
 */
 
 //
-time_t dia_de_hoje = 0, ultimo_dia = 0;
+time_t dia_de_hoje = 0;

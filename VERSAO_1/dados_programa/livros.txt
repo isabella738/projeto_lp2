@@ -1,0 +1,305 @@
+38
+00001
+Por Lugares Incriveis
+Jenifer Niven
+Seguinte
+2015
+5
+4
+1
+00002
+O Morro dos Ventos Uivantes
+Emily Bronte
+Principis
+2019
+5
+5
+3
+00003
+O Retrato de Dorian Gray
+Oscar Wilde
+Penguim Companhia
+2012
+5
+5
+1
+00004
+E Nao Sobrou Nenhum
+Agatha Christie
+Globo Livros
+2014
+5
+5
+4
+00005
+As de Espadas
+Faridah Abike-Iyimide
+Plataforma 21
+2021
+5
+5
+1
+00006
+1984
+George Orwell
+Leya
+2021
+5
+5
+1
+00007
+O Menino do Pijama Listrado
+John Boyle
+Cia. das Letras
+2013
+5
+5
+1
+00008
+A Vida Invisivel de Addie Larue
+V. E. Schwab
+Galera
+2022
+5
+5
+8
+00009
+A Menina que Roubava Livros
+Markus Zusak
+Intrinseca
+2010
+5
+5
+2
+00010
+A Hora da Estrela
+Clarice Lispector
+Rocco
+2019
+5
+5
+1
+00011
+Agua Viva
+Clarice Lispector
+Rocco
+2019
+5
+5
+1
+00012
+Perto do Coracao Selvagem
+Clarice Lispector
+Rocco
+2019
+5
+5
+1
+00013
+A Paixao Segundo G.H.
+Clarice Lispector
+Rocco
+2019
+5
+4
+1
+00014
+Um Sopro de Vida
+Clarice Lispector
+Rocco
+2019
+5
+5
+1
+00015
+Crime e Castigo
+Fiodor Dostoyevski
+Penguim Companhia
+2019
+5
+5
+1
+00016
+Memorias do Subsolo
+Fiodor Dostoievski
+Penguim Companhia
+2019
+5
+5
+1
+00017
+Em Memoria
+Alice Winn
+Astral Cultural
+2025
+5
+5
+1
+00018
+O Apanhador no Campo de Centeio
+J.D. Salinger
+Editora do Autor
+1965
+5
+5
+12
+00019
+A Metamorfose
+Franz Kafka
+Principis
+2019
+5
+5
+2
+00020
+Cortem as Cabecas
+Mainak Dhar
+Unica
+2017
+5
+5
+1
+00021
+O Pequeno Principe
+Antoine de Saint-Exupery
+Pe da Letra
+2016
+5
+5
+1
+00022
+O Principe
+Maquiavel
+Pe da Letra
+2013
+5
+5
+1
+00023
+O Fantasma da Opera
+Gastou Leroux
+Pandorga
+2021
+5
+5
+1
+00024
+Assassinato no Expresso Oriente
+Agatha Christie
+LePM
+2021
+24
+24
+1
+00025
+Meditacoes
+Marco Aurelio
+EdiPro
+2021
+5
+5
+1
+00026
+Manual de Epicteto
+Epicteto
+EdiPro
+2021
+5
+5
+1
+00027
+Sobre a Brevidade da Vida
+Seneca
+EdiPro
+2021
+5
+5
+1
+00028
+Moby Dick
+Herman Melville
+Zahar
+2022
+5
+5
+2
+00029
+A Morte de Ivan Ilitch
+Liev Tolstoi
+Editora 34
+2009
+5
+5
+2
+00030
+Guerra e Paz
+Liev Tolstoi
+Companhia das Letras
+2013
+5
+5
+1
+00031
+De Quanta Terra Precisa o Homem
+Liev Tolstoi
+Principis
+2015
+5
+5
+1
+00032
+Noites Brancas
+Fiodor Dostoievski
+Penguim Companhia
+2015
+5
+5
+1
+00033
+A Guerra da Papoula
+R.F. Kuang
+Intrinseca
+2018
+5
+5
+1
+00034
+Capitaes da Areia
+Jorge Amado
+Companhia do Bolso
+2009
+5
+5
+1
+00035
+Gabriela, Cravo e Canela
+Jorge Amado
+Edicao Economica
+2012
+5
+5
+2
+00036
+Noite na Taverna
+Alvares de Azevedo
+Principis
+2019
+5
+5
+1
+00037
+Vidas Secas
+Graciliano Ramos
+Principis
+2024
+5
+5
+1
+00038
+Frankenstein
+Mary Shelley
+Darkside
+2017
+5
+5
+1

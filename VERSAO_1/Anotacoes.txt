@@ -24,4 +24,3 @@ Funcionalidades desenvolvidas:
 - Alocação de memória (no futuro)
 - Organização em múltiplos arquivos
 - Desenvolvimento de bibliotecas personalizadas
-

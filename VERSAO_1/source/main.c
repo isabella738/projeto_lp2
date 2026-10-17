@@ -21,9 +21,6 @@ Exemplos de uso:
     while(ler_int(&escolha, 0, 10));
     if(!escolha) return 0;
 
-Obs: nos casos onde nao existem livros ou usuarios cadastrados no sistema, ele imprime uma mensagem
-e volta para o respectivo menu, mas por causa do limpar_tela essa mensagem nunca apareceria. por isso, 
-depois dessas mensagens sempre precisa colocar um VOLTAR_APAGAR, pq ai só apaga oq ta antes da mensagem
 */
 
 #include <stdio.h>
@@ -54,7 +51,7 @@ int listagem(){
         nesta nova variavel. O vetor original fica intacto
     */
 
-    if(sem_livros()) return 0;
+    if(erro(1)) return 0;
 
     limpar_tela();
     printf("**=======================**\n");
@@ -74,7 +71,9 @@ int listagem(){
     memcpy(lista, livro, sizeof(Livros)* total_livros);
 
     if(n == 1){
-        //Imprimir livros simplesmente como eles aparecem no vetor
+        for(int i=0; i<total_livros; i++){
+            lista[total_livros - 1 - i] = livro[i];
+        }
     }
     else if(n == 2){//exibe em ordem alfabetica (pelo titulo)
         for(int i=0; i<total_livros; i++){
@@ -146,6 +145,8 @@ int busca(){
         - Codigo
     */
 
+    if(erro(1)) return 0;
+
     limpar_tela();
     printf("**=======================**\n");
     printf("           BUSCA           \n");
@@ -178,11 +179,11 @@ int busca(){
 
         switch(n){
             case 1:
-                achou = strstr_noCS(livro[i].titulo, busca); break;
+                achou = strstr_noCS(livro[i].titulo, busca, 80); break;
             case 2:
-                achou = strstr_noCS(livro[i].autor, busca); break;
+                achou = strstr_noCS(livro[i].autor, busca, 80); break;
             case 3:
-                achou = strstr_noCS(livro[i].editora, busca); break;
+                achou = strstr_noCS(livro[i].editora, busca, 80); break;
         }
         
         if(achou){
@@ -216,8 +217,8 @@ int consulta(){ // fazer apenas os livros do usuario
 }
 
 int emprestimo(){
-    if(sem_livros()) return 0;
-    if(usuario_bloqueado(*user)) return 0;
+    if(erro(1)) return 0;
+    if(erro(4)) return 0;
 
     limpar_tela();
     printf("**=======================**\n");
@@ -247,6 +248,7 @@ int emprestimo(){
             Emprestimos *e = &user->emprestimo[*q]; //só pra encurtar o nome nas proximas linhas
 
             strcpy(e->codigo, livro[x].codigo);
+            e->tempo_inicio = dia_de_hoje;
             e->prazo = DIAS_EMPRESTIMO;
             e->atrasado = 0;
             (*q)++;//incrementa a posicao disponivel pro proximo emprestimo
@@ -289,6 +291,9 @@ int devolucao(){
 }
 
 int editar_conta(){
+
+    if(erro(3)) return 0;
+
     limpar_tela();
     printf("**=======================**\n");
     printf("      GERENCIAR CONTA      \n");
@@ -412,9 +417,9 @@ int cadastro(){
 }
 
 int editar_livro(){
-    if(sem_livros()) return 0;
+    if(erro(1)) return 0;
 
-    limpar_tela();
+    limpar_tela(); 
     printf("**=======================**\n");
     printf("       EDITAR LIVROS       \n");
     printf("**=======================**\n");
@@ -422,7 +427,7 @@ int editar_livro(){
     char codigo[TAM_CODIGO];
     int x;
     printf("Insira o código do livro: \n"); 
-    ler_codigo_existente(codigo, &x);
+    while(ler_codigo_existente(codigo, &x));
     if(string_vazia(codigo)) return 0;
     printf(APAGAR_LINHA);
 
@@ -535,6 +540,9 @@ int editar_livro(){
 }
 
 int vizualizar_emprestimos(){
+    if(erro(2)) return 0;
+
+
     limpar_tela();
 }
 
@@ -612,6 +620,8 @@ int cadastro_usuario() {
 }
 
 int menu () {//menu comum
+
+    if(erro(3)) return 0;
 
     limpar_tela();
     
@@ -700,7 +710,7 @@ int entrada_usuario() {
         char nome[TAM_STRING], senha[TAM_SENHA];
         int posicao = -1;
 
-        if(sem_usuarios()) return 0;
+        if(erro(2)) return 0;
 
         //
         //Leitura do nome

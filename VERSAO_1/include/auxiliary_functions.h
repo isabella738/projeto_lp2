@@ -12,7 +12,7 @@ int letras_minusculas(char string[]);//aviso: a funcao altera diretamente a stri
 
 int strcmp_noCS(char string1[], char string2[]);//strcmp sem Case Sensitive. Retorna 0 (iguais) ou 1 (diferentes)
 
-int strstr_noCS(char string1[], char string2[]);//strstr sem Case Sentsitive. Retorna 1 se string2 for substring de string1
+int strstr_noCS(char string1[], char string2[], int margem);//strstr sem Case Sentsitive. Retorna 1 se string2 for substring de string1. Aceita margem de erro
 
 int busca_codigo(Livros livro[], int tam, char codigo[]);//retorna a posicao no array do livro dado pelo codigo
 
@@ -34,16 +34,16 @@ void imprimir_info_usuario(Usuarios u);//imprime nome, qntd de livros emprestado
 
 void limpar_tela();//limpa a tela do cursor pra cima
 
-int sem_livros();
-
-int sem_usuarios();
+int erro(int i);//1:sem livros; 2:sem usuarios; 3:problema no ponteiro user; 4:usuario suspenso
 
 void passagem_de_tempo();
 
 int qtd_atrasos(Usuarios u);
 
-int usuario_bloqueado(Usuarios u);
-
 void pausa();
 
 int busca_rapida();//le um codigo, verifica se existe, limpa a tela e exibe informações integrais do livro
+
+void carregar_dados();
+
+int salvar_dados();//retorna 0 somente se os usuarios ou livros nao foram salvos
