@@ -25,6 +25,7 @@ Exemplos de uso:
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "settings.h"
 #include "input_verification.h"
 #include "auxiliary_functions.h"
@@ -40,6 +41,7 @@ Exemplos de uso:
 */
 
 int listagem(){
+    if(erro(1)) return 0;
     /*
         Ordena por:
         - Adicionados recentemente
@@ -50,24 +52,27 @@ int listagem(){
         Consiste em: copiar o vetor de livros para uma nova variavel, e entao organizar os livros
         nesta nova variavel. O vetor original fica intacto
     */
-
-    if(erro(1)) return 0;
+    
+    int n;
+    Livros lista[total_livros];//onde fica a nova organizacao
 
     limpar_tela();
-    printf("**=======================**\n");
-    printf("          LISTAGEM         \n");
-    printf("**=======================**\n");
+    printf(
+        "**=======================**\n"
+        "          LISTAGEM         \n"
+        "**=======================**\n"
+        "\n"
+        "Ordenar por:\n"
+        "(1) Adicionados recentemente\n"
+        "(2) Ordem alfabetica (titulo)\n"
+        "(3) Ano de publicacao (+ recentes primeiro)\n"
+        "(4) Ano de publicacao (+ antigos primeiro)\n"
+        "(0) Sair\n"
+    );
 
-    printf("Ordenar por:\n");
-    printf("(1) Adicionados recentemente\n");
-    printf("(2) Ordem alfabetica (titulo)\n");
-    printf("(3) Ano de publicacao (+ recentes primeiro)\n");
-    printf("(4) Ano de publicacao (+ antigos primeiro)\n");
-    printf("(0) Sair\n");
-    int n; while(ler_int(&n, 0, 4));
+    while(ler_int(&n, 0, 4));
     if(!n) return 0;
 
-    Livros lista[total_livros];//onde fica a nova organizacao
     memcpy(lista, livro, sizeof(Livros)* total_livros);
 
     if(n == 1){
@@ -137,6 +142,7 @@ int listagem(){
 }
 
 int busca(){
+    if(erro(1)) return 0;
     /*
         Procura por:
         - Titulo
@@ -145,22 +151,27 @@ int busca(){
         - Codigo
     */
 
-    if(erro(1)) return 0;
-
-    limpar_tela();
-    printf("**=======================**\n");
-    printf("           BUSCA           \n");
-    printf("**=======================**\n");
-
     int n, contador = 0;
     int indices[total_livros]; //guarda o indice do livro que corresponder à busca p facilitar a impressao depois
     char busca[TAM_STRING]; 
 
-    printf("\nBuscar por titulo (1), nome do autor (2), editora (3) ou codigo (4)?\n");
+    limpar_tela();
+    printf(
+        "**=======================**\n"
+        "           BUSCA           \n"
+        "**=======================**\n"
+        "\n"
+        "Buscar por titulo (1), nome do autor (2), editora (3) ou codigo (4)?\n"
+    );
+
     while(ler_int(&n, 0, 4));
     if(!n) return 0;
 
-    printf("\n----------\nInsira sua busca.\n"); 
+    printf(
+        "\n"
+        "-----------------\n"
+        "Insira sua busca:\n"
+    );
 
     //Leitura do codigo (exibe 1 unico resultado)
     if(n == 4){
@@ -220,15 +231,17 @@ int emprestimo(){
     if(erro(1)) return 0;
     if(erro(4)) return 0;
 
-    limpar_tela();
-    printf("**=======================**\n");
-    printf("        EMPRESTIMO         \n");
-    printf("**=======================**\n");
-
-    //busca por codigo p ser exato
     int x;
     char cod[TAM_CODIGO];
-    printf("\nDigite o codigo do livro desejado:\n");
+
+    limpar_tela();
+    printf(
+        "**=======================**\n"
+        "        EMPRESTIMO         \n"
+        "**=======================**\n"
+        "\n"
+        "Digite o codigo do livro desejado:\n"
+    );
 
     ler_codigo_existente(cod, &x);
     if(string_vazia(cod)) return 0;
@@ -248,7 +261,7 @@ int emprestimo(){
             Emprestimos *e = &user->emprestimo[*q]; //só pra encurtar o nome nas proximas linhas
 
             strcpy(e->codigo, livro[x].codigo);
-            e->tempo_inicio = dia_de_hoje;
+            time(&e->tempo_inicio);
             e->prazo = DIAS_EMPRESTIMO;
             e->atrasado = 0;
             (*q)++;//incrementa a posicao disponivel pro proximo emprestimo
@@ -291,45 +304,51 @@ int devolucao(){
 }
 
 int editar_conta(){
-
     if(erro(3)) return 0;
 
+    int x, sucesso=0;
+
     limpar_tela();
-    printf("**=======================**\n");
-    printf("      GERENCIAR CONTA      \n");
-    printf("**=======================**\n");
+    printf(
+        "**=======================**\n"
+        "      GERENCIAR CONTA      \n"
+        "**=======================**\n"
+        "\n"
+    ); imprimir_info_usuario(*user);
 
-    printf("\n");
-    imprimir_info_usuario(*user);
+    printf(
+        "\n"
+        "Escolha uma acao:\n"
+        "[1] Editar Nome\n"
+        "[2] Redefinir senha\n"
+        "[3] Excluir conta\n"
+        "[0] Sair\n"
+    );
 
-    printf("\nEscolha uma acao:\n");
-    printf("[1] Editar Nome\n");
-    printf("[2] Redefinir senha\n");
-    printf("[3] Excluir conta\n");
-    printf("[0] Sair\n");
-
-    int x; while(ler_int(&x, 0, 3));
+    while(ler_int(&x, 0, 3));
     if(!x) return 0;
 
     printf("\n-----------------\n");
-    int sucesso = 0;
-    if(x == 1){
+    if(x == 1){// editar nome
         char novo[TAM_STRING];
         printf("Insira o novo nome:\n");
 
         while(ler_novo_nome(novo));
-        if(string_vazia(novo)) return 1; //return 1 = volta pra esse mesmo menu
+        if(string_vazia(novo)) return 1;
 
-        printf("A seguinte modificacao sera feita:\n");
-        printf("%s -> %s\n", user->nome, novo);
-        printf("Continuar? ");
+        printf(
+            "\nA seguinte modificacao sera feita:\n"
+            "%s -> %s\n"
+            "\nContinuar? ",
+            user->nome, novo
+        );
 
         if(sim()){
             strcpy(user->nome, novo);
             sucesso = 1;
         }
     }
-    else if(x == 2){
+    else if(x == 2){ // redefinir senha
         char novo[TAM_SENHA] = {0}, confrm[TAM_SENHA];
 
         printf("Insira a senha atual:\n");
@@ -351,18 +370,30 @@ int editar_conta(){
         strcpy(user->senha, novo);
         sucesso = 1;
     }
-    else if(x == 3){
-        printf("Voce tem certeza de que deseja prosseguir? Esta acao nao pode ser desfeita. ");
+    else if(x == 3){ //excluir conta
 
+        if(user->qtd_emp > 0){
+            printf(
+                "Voce nao pode excluir sua conta enquanto possuir emprestimos ativos.\n"
+                "Devolva os livros pendentes para realizar esta acao."
+            );
+            pausa();
+            return 1;
+        }
+
+        printf("Voce tem certeza de que deseja prosseguir? Esta acao nao pode ser desfeita. ");
         if(sim()){
             apagar_usuario(usuario, user_ativo, &total_usuarios);
             printf("Acao bem sucedida.\n");
+            pausa();
+
             return -1;//volta para a entrada de usuario
         }
     }
 
-    if(sucesso) printf("Modificacao bem sucedida.\n");
-    else printf("Acao cancelada.\n");
+    if(sucesso) printf("\nModificacao bem sucedida.");
+    else printf("\nAcao cancelada.");
+    pausa();
 
     return 1;
 }
@@ -377,23 +408,23 @@ int editar_conta(){
 */
 
 int cadastro(){
-    limpar_tela();
-    printf("**=======================**\n");
-    printf("     CADASTRO DE LIVROS    \n");
-    printf("**=======================**\n");
-
-    if(total_livros >= MAX_LIVROS) {
-        printf("Limite de livros atingido!"); // dps a gente tira com a alocacao dinamica
-        printf(VOLTAR_LINHA);
-        return 0;
-    }
+    if(erro(5)) return 0; // dps a gente tira com a alocacao dinamica 
 
     Livros l;
-    printf("\nDigite as informacões sobre o novo livro:\n");
+    int x, salvar = 1;
+
+    limpar_tela();
+    printf(
+        "**=======================**\n"
+        "     CADASTRO DE LIVROS    \n"
+        "**=======================**\n"
+        "\n" 
+        "Digite as informacões sobre o novo livro:\n"
+    );
+
     if(!ler_livro(&l)) return 0;
     
-    int x = livro_duplicado(l);
-    int salvar = 1;
+    x = livro_duplicado(l);
 
     if(x >= 0){
         printf("\nAtencao: encontramos um livro ja cadastrado no sistema com informacoes semelhantes a este:\n");
@@ -419,14 +450,18 @@ int cadastro(){
 int editar_livro(){
     if(erro(1)) return 0;
 
-    limpar_tela(); 
-    printf("**=======================**\n");
-    printf("       EDITAR LIVROS       \n");
-    printf("**=======================**\n");
-
     char codigo[TAM_CODIGO];
     int x;
-    printf("Insira o código do livro: \n"); 
+
+    limpar_tela(); 
+    printf(
+        "**=======================**\n"
+        "       EDITAR LIVROS       \n"
+        "**=======================**\n"
+        "\n"
+        "Insira o código do livro:\n"
+    );
+
     while(ler_codigo_existente(codigo, &x));
     if(string_vazia(codigo)) return 0;
     printf(APAGAR_LINHA);
@@ -434,18 +469,22 @@ int editar_livro(){
     //loop para edicoes no livro escolhido
     do{
         limpar_tela();
-        printf("\n------------------\n");
-        printf("Livro selecionado:\n"); exibir_info_livro(livro[x]);
 
-        printf("\nEscolha uma acao:\n");
-        printf("[1] Editar Titulo\n");
-        printf("[2] Editar Autor\n");
-        printf("[3] Alterar ano de publicacao\n");
-        printf("[4] Alterar Editora\n");
-        printf("[5] Alterar Edicao\n");
-        printf("[6] Ajustar numero de exemplares disponiveis\n");
-        printf("[7] Excluir Livro\n");
-        printf("[0] Sair\n");
+        printf("Livro selecionado:\n"); 
+        exibir_info_livro(livro[x]);
+
+        printf(
+            "\n"
+            "Escolha uma acao:\n"
+            "[1] Editar Titulo\n"
+            "[2] Editar Autor\n"
+            "[3] Alterar ano de publicacao\n"
+            "[4] Alterar Editora\n"
+            "[5] Alterar Edicao\n"
+            "[6] Ajustar numero de exemplares disponiveis\n"
+            "[7] Excluir Livro\n"
+            "[0] Sair\n"
+        );
 
         int escolha; while(ler_int(&escolha, 0, 7));
         if(!escolha) break;
@@ -454,6 +493,7 @@ int editar_livro(){
 
         int sucesso=0;
         char novo[TAM_STRING]; int n;
+
         if(escolha == 1){//titulo
             printf("Novo titulo:\n"); while(ler_string(novo, TAM_STRING));
             if(!string_vazia(novo)){
@@ -506,7 +546,7 @@ int editar_livro(){
         }
         else if(escolha == 5){//edicao
             printf("Insira a edicao:\n");
-            while(ler_int(&n, 0, 100));
+            while(ler_int(&n, 1, 100));
             //sei la, 100 é um numero qualquer, nao acho relevante criar uma macro so pra isso.
             //nao vai existir um livro com mais de CEM edicoes... ne?
 
@@ -533,13 +573,13 @@ int editar_livro(){
         if(sucesso) printf("Acao bem sucedida.\n");
         else printf("Acao cancelada.\n");
 
-        printf("\nContinuar fazendo alteracoes para o mesmo livro? ");
-    }while(sim());
+        pausa();
+    }while(1);
 
     return 1;
 }
 
-int vizualizar_emprestimos(){
+int visualizar_emprestimos(){
     if(erro(2)) return 0;
 
 
@@ -556,47 +596,45 @@ int vizualizar_emprestimos(){
 */
 
 int menu_proprietario() {
-    /*
-        return 1 = volta pra esse mesmo menu
-        return 0 = volta para a entrada de usuario
-    */
+
     limpar_tela();
-    printf("**=======================**\n");
-    printf("    AREA DO PROPRIETARIO   \n");
-    printf("**=======================**\n");  
-    printf("\n[1] Cadastrar livro\n[2] Editar livro\n[3] Emprestimos ativos\n[4] Voltar\n");
-    printf("\nDigite a opcao que deseja:\n");
+    printf(
+        "**=======================**\n"
+        "    AREA DO PROPRIETARIO   \n"
+        "**=======================**\n"
+        "\n"
+        "[1] Cadastrar livro\n"
+        "[2] Editar livro\n"
+        "[3] Emprestimos ativos\n"
+        "[0] Voltar\n"
+        "\n"
+        "Digite a opcao que deseja:\n"
+    );
 
     int r;
-    while(ler_int(&r, 1, 4));
+    while(ler_int(&r, 0, 3));
 
     switch(r) {
         case 1: while(cadastro()); break;
         case 2: while(editar_livro()); break;
-        case 3: while(vizualizar_emprestimos()); break;
-        case 4: return 0;
+        case 3: while(visualizar_emprestimos()); break;
+        case 0: return 0;
     } 
 
     return 1;
 }
 
 int cadastro_usuario() {
-    /*
-        return 1 = volta pra esse mesmo menu
-        return 0 = volta para a entrada de usuario
-    */
-
-    limpar_tela();
-    printf("**=======================**\n");
-    printf("    CADASTRO DE USUARIO    \n");
-    printf("**=======================**\n");
+    if(erro(6)) return 0; // tirar dps da alocacao dinamica
 
     char nome[TAM_STRING], senha[TAM_SENHA] = {0};
 
-    if(total_usuarios >= TAM_USUARIOS) { // tirar dps da alocacao dinamica
-        printf("Limite de usuarios atingido.\n");
-        return 0;
-    }
+    limpar_tela();
+    printf(
+        "**=======================**\n"
+        "    CADASTRO DE USUARIO    \n"
+        "**=======================**\n"
+    );
 
     printf("\nDigite seu nome:\n"); 
     while(ler_novo_nome(nome));
@@ -620,26 +658,29 @@ int cadastro_usuario() {
 }
 
 int menu () {//menu comum
-
     if(erro(3)) return 0;
 
     limpar_tela();
+    printf(
+        "Seja bem vindo(a) %s\n"
+        "Voce tem %d pendencias.\n"
+        "\n"
+        "**=======================**\n"
+        "           MENU            \n"
+        "**=======================**\n"
+        "\n"
+        "[1] Listagem de livros\n"
+        "[2] Busca de livros\n"
+        "[3] Emprestimo\n"
+        "[4] Devolucao\n"
+        "[5] Meus livros\n"
+        "[6] Gerenciar conta\n"
+        "[0] Sair\n"
+        "\n"
+        "Digite a opcao que deseja:\n",
+        user->nome, qtd_atrasos(*user)
+    );
     
-    printf("Seja bem vindo(a) %s\n", user->nome);
-    printf("Voce tem %d pendencias.\n\n", qtd_atrasos(*user));
-
-    printf("**=======================**\n");
-    printf("           MENU            \n");
-    printf("**=======================**\n\n");
-    printf("[1] Listagem de livros\n");
-    printf("[2] Busca de livros\n");
-    printf("[3] Emprestimo\n");
-    printf("[4] Devolucao\n");
-    printf("[5] Meus livros\n");
-    printf("[6] Gerenciar conta\n");
-    printf("[0] Sair\n\n");
-    
-    printf("Digite a opcao que deseja:\n");
     int r; while(ler_int(&r, 0, 6));
     switch(r) {
         case 1:
@@ -659,8 +700,8 @@ int menu () {//menu comum
             break;
         case 6:
             int x;
-            while((x = editar_conta()) > 0);//significa que o usuario foi apagado
-            if(x < 0) return 0;
+            while((x = editar_conta()) > 0);
+            if(x < 0) return 0; //significa que o usuario foi apagado
             break;
         default:
             printf("Voce sera redirecionado para a tela de login. Continuar? ");
@@ -678,13 +719,12 @@ int menu () {//menu comum
     return 2 = login como usuario
     return 3 = cadastro de usuario
 */
-
 int entrada_usuario() {
     int resposta;
     while(ler_int(&resposta, 1, 4));
     printf("\033[0J");//limpa tudo oq estiver abaixo do cursor, sem move-lo. 
-    //algumas mensagens de erro, tipo de tentativas excedidas sao impressas muito embaixo e nao é apagada
-    //depois de modo convencional, por isso apagar a tela aqui
+    //algumas mensagens de erro, tipo de tentativas excedidas sao impressas muito embaixo e nao sao apagadas
+    //depois de modo convencional, por isso precisa apagar a tela aqui
     
     if(resposta == 1) { // proprietario
         char prop[TAM_CODIGO];
@@ -702,7 +742,7 @@ int entrada_usuario() {
 
             printf("Codigo invalido, deseja tentar novamente? ");
             if(!sim()) return 0;
-            printf(VOLTAR_LINHA APAGAR_LINHA VOLTAR_LINHA APAGAR_LINHA);
+            printf(VOLTAR_APAGAR VOLTAR_APAGAR);
         } while (1);
         printf(APAGAR_LINHA);
 

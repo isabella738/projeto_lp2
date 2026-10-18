@@ -20,7 +20,7 @@ Funcionalidades desenvolvidas:
         - Edicao e exclusão de livro
         - Visualizar emprestimos (em andamento)
 
-- Permanência de arquivos (no futuro)
+- Permanência de arquivos
 - Alocação de memória (no futuro)
 - Organização em múltiplos arquivos
 - Desenvolvimento de bibliotecas personalizadas

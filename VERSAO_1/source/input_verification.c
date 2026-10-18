@@ -32,6 +32,7 @@ int ler_string(char string[], int tam){
     printf("> ");
     char teste[tam+100]; fgets(teste, tam+100, stdin);
 
+    tirar_enter(teste);
     remover_espacos(teste);
 
     if(strlen(teste) >= tam){

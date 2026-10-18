@@ -9,9 +9,10 @@ Sao genericas, portanto, quando possivel, não devem usar as variaveis globais d
 #include <string.h>
 #include "settings.h"
 #include "input_verification.h"
+#include "auxiliary_functions.h"
 
 //
-//Edicao de texto e estetica do terminal
+//Respostas rapidas e estetica do terminal
 
 void resetar_buffer(){
     while(getchar() != '\n'); 
@@ -23,7 +24,11 @@ void pausa(){
 }
 
 void limpar_tela(){
-    printf("\033[1J\033[H");
+    #if defined(_WIN32) || defined(_WIN64)
+        system("cls");
+    #elif defined(__linux__)
+        system("clear");
+    #endif
 }
 
 int sim(){
@@ -33,6 +38,53 @@ int sim(){
     if(c == 'S' || c == 's') return 1;
     return 0;
 }
+
+int erro(int i){
+    switch(i){
+        case 1: //sem livros 
+            if(total_livros == 0){
+                printf("Voce nao pode realizar esta acao pois nao existem livros cadastrados no sistema." VOLTAR_APAGAR);
+                return 1;
+            }
+            return 0;
+        case 2: //sem usuarios
+            if(total_usuarios == 0){
+                printf("Voce nao pode realizar esta acao pois nao existem usuarios cadastrados no sistema." VOLTAR_APAGAR);
+                return 1;
+            }
+            return 0;
+        case 3:
+            if(user == NULL){
+                printf("Ocorreu um erro ao acessar o usuario. Feche o programa e tente novamente. Se o problema persistir, contate os desenvolvedores." VOLTAR_APAGAR);
+                return 1;
+            }
+            return 0;
+        case 4: //usuario bloqueado
+            if(erro(3)) return 1;
+            if(user->suspenso){
+                printf("Voce alcancou o limite toleravel de devolucoes atrasadas. Voce esta bloqueado de realizar esta acao ate resolver suas pendencias.\n");
+                printf("Contate o proprietario se voce achar que isso e um erro.");
+                printf(VOLTAR_APAGAR VOLTAR_APAGAR);
+                return 1;
+            }
+            return 0;
+        case 5: //max de livros no sistema (temporario)
+            if(total_livros >= MAX_LIVROS){
+                printf("Limite de livros atingido! Exclua algum livro ou contate os desenvolvedores para ampliar o limite." VOLTAR_APAGAR);
+                return 1;
+            }
+            return 0;
+        case 6: //max usuarios (temporario)
+            if(total_usuarios >= TAM_USUARIOS){
+                printf("Limite de usuarios atingido. contate os desenvolvedores para ampliar o limite." VOLTAR_APAGAR);
+                return 1;
+            }
+            return 0;
+    }
+}
+
+//
+//Das strings
 
 int string_vazia(char string[]){
     if(strlen(string) > 0) 
@@ -49,8 +101,6 @@ void tirar_enter(char string[]){
 int remover_espacos(char string[]){
     char novo[strlen(string)+1];
     int n = 0;
-
-    tirar_enter(string);
 
     for(int i=0; i<strlen(string); i++){
         if(string[i] == ' ' && (string[i+1] == ' ' || string[i+1] == '\0')) continue;
@@ -110,6 +160,67 @@ int strstr_noCS(char string1[], char string2[], int margem){
 }
 
 //
+//Impressão de informações
+
+void exibir_info_livro(Livros livro){
+    printf(
+        "Titulo: %s\n"
+        "Autor: %s\n"
+        "Codigo: %s\n"
+        "Editora: %s\n"
+        "Ano de publicacao: %d\n"
+        "Edicao: %da\n"
+        "Exemplares disponiveis: %d\n",
+        livro.titulo, livro.autor, livro.codigo, livro.editora, 
+        livro.ano, livro.edicao, livro.qtdDisponiveis
+    );
+}
+
+void exibir_info_rapida(Livros livro){
+    printf("[%s] %s - %s\n", livro.codigo, livro.titulo, livro.autor);
+}
+
+void imprimir_lista_livros(Livros vetor[], int max){
+    for(int i=0; i<max; i++){
+        exibir_info_rapida(vetor[i]);
+    }
+}
+
+void imprimir_info_usuario(Usuarios u){
+    printf(
+        "Nome: %s\n"
+        "Emprestimos ativos: %d\n"
+        "Emprestimos atrasados: %d\n"
+        "Situacao da conta: ",
+        u.nome, u.qtd_emp, qtd_atrasos(u)
+    );
+    u.suspenso ? printf("suspensa.\n") : printf("regular.\n");
+}
+
+//
+//Relacionados ao vetor
+
+void apagar_livro(Livros vetor[], int x, int *tam){
+    for(int i=x; i<(*tam) - 1; i++){
+        vetor[i] = vetor[i+1];
+    }
+    (*tam)--;
+}
+
+void apagar_usuario(Usuarios vetor[], int x, int *tam){
+    for(int i=x; i<(*tam) - 1; i++){
+        vetor[i] = vetor[i+1];
+    }
+    (*tam)--;
+}
+
+void swap_livros(Livros *livro1, Livros *livro2){
+    Livros temp = *livro1;
+    *livro1 = *livro2;
+    *livro2 = temp;
+}
+
+//
 //Outros
 
 int livro_duplicado(Livros l){
@@ -125,37 +236,6 @@ int livro_duplicado(Livros l){
     return -1;
 }
 
-int erro(int i){
-    switch(i){
-        case 1: //sem livros 
-            if(total_livros == 0){
-                printf("Voce nao pode realizar esta acao pois nao existem livros cadastrados no sistema." VOLTAR_APAGAR);
-                return 1;
-            }
-            return 0;
-        case 2: //sem usuarios
-            if(total_usuarios == 0){
-                printf("Voce nao pode realizar esta acao pois nao existem usuarios cadastrados no sistema." VOLTAR_APAGAR);
-                return 1;
-            }
-            return 0;
-        case 3:
-            if(user == NULL){
-                printf("Ocorreu um erro ao acessar o usuario. Feche o programa e tente novamente." VOLTAR_APAGAR);
-                return 1;
-            }
-            return 0;
-        case 4: //usuario bloqueado
-            if(erro(3)) return 1;
-            if(user->suspenso){
-                printf("Voce alcancou o limite toleravel de devolucoes atrasadas. Voce esta bloqueado de realizar esta acao ate resolver suas pendencias.");
-                printf(VOLTAR_APAGAR);
-                return 1;
-            }
-            return 0;
-    }
-}
-
 void passagem_de_tempo(){
 
     for(int i=0; i<total_usuarios; i++){
@@ -163,9 +243,9 @@ void passagem_de_tempo(){
         for(int j=0; j<usuario[i].qtd_emp; j++){
             Emprestimos *e = &usuario[i].emprestimo[j];
 
-            int dias = dia_de_hoje - e->tempo_inicio;
+            int tempo = dia_de_hoje - e->tempo_inicio;
 
-            if(dias > e->prazo){
+            if(tempo/(3600*24*365) > e->prazo){
                 usuario[i].emprestimo[j].atrasado = 1;
                 x++;
             }
@@ -208,61 +288,6 @@ int busca_rapida(){
 }
 
 //
-//Impressão de informações
-
-void exibir_info_livro(Livros livro){
-    printf("Titulo: %s\n", livro.titulo);
-    printf("Autor: %s\n", livro.autor);
-    printf("Codigo: %s\n", livro.codigo);
-    printf("Editora: %s\n", livro.editora);
-    printf("Ano de publicacao: %d\n", livro.ano);
-    printf("Edicao: %da\n", livro.edicao);
-    printf("Exemplares disponiveis: %d\n", livro.qtdDisponiveis);
-}
-
-void exibir_info_rapida(Livros livro){
-    printf("[%s] %s - %s\n", livro.codigo, livro.titulo, livro.autor);
-}
-
-void imprimir_lista_livros(Livros vetor[], int max){
-    for(int i=0; i<max; i++){
-        printf("\n");
-        exibir_info_rapida(vetor[i]);
-    }
-}
-
-void imprimir_info_usuario(Usuarios u){
-    printf("Nome: %s\n", u.nome);
-    printf("Emprestimos ativos: %d\n", u.qtd_emp);
-    printf("Emprestimos atrasados: %d\n", qtd_atrasos(u));
-    printf("Situacao da conta: ");
-    u.suspenso ? printf("suspensa.\n") : printf("regular.\n");
-}
-
-//
-//Relacionados ao vetor
-
-void apagar_livro(Livros vetor[], int x, int *tam){
-    for(int i=x; i<(*tam) - 1; i++){
-        vetor[i] = vetor[i+1];
-    }
-    (*tam)--;
-}
-
-void apagar_usuario(Usuarios vetor[], int x, int *tam){
-    for(int i=x; i<(*tam) - 1; i++){
-        vetor[i] = vetor[i+1];
-    }
-    (*tam)--;
-}
-
-void swap_livros(Livros *livro1, Livros *livro2){
-    Livros temp = *livro1;
-    *livro1 = *livro2;
-    *livro2 = temp;
-}
-
-//
 //Leitura de dados do programa
 
 void avancar_linha(FILE *arquivo) {
@@ -289,7 +314,7 @@ void ARQ_lerInt(FILE *arquivo, int *n){
     avancar_linha(arquivo); //para tirar o \n que deixa o scanf
 }
 
-int carregar_dados(){
+void carregar_dados(){
     FILE *arquivo;
 
     //Leitura de Usuarios
@@ -303,9 +328,9 @@ int carregar_dados(){
         for(int i=0; i<total_usuarios; i++){
             ARQ_lerString(arquivo, TAM_STRING, usuario[i].nome);
             ARQ_lerString(arquivo, TAM_SENHA, usuario[i].senha);
-
-            ARQ_lerInt(arquivo, &usuario[i].qtd_emp);
+            
             ARQ_lerInt(arquivo, &usuario[i].suspenso);
+            ARQ_lerInt(arquivo, &usuario[i].qtd_emp);
 
             for(int j=0; j<usuario[i].qtd_emp; j++){
                 ARQ_lerString(arquivo, TAM_CODIGO, usuario[i].emprestimo[j].codigo);
@@ -339,8 +364,6 @@ int carregar_dados(){
         }
         fclose(arquivo);
     }
-
-    return 1;
 }
 
 int salvar_dados(){
@@ -356,8 +379,8 @@ int salvar_dados(){
     for(int i=0; i<total_usuarios; i++){
         fprintf(arquivo, "%s\n", usuario[i].nome);
         fprintf(arquivo, "%s\n", usuario[i].senha);
-        fprintf(arquivo, "%d\n", usuario[i].qtd_emp);
         fprintf(arquivo, "%d\n", usuario[i].suspenso);
+        fprintf(arquivo, "%d\n", usuario[i].qtd_emp);
 
         for(int j=0; j<usuario[i].qtd_emp; j++){
             fprintf(arquivo, "%s\n", usuario[i].emprestimo[j].codigo);

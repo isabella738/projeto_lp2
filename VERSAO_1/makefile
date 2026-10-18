@@ -1,7 +1,10 @@
 COMPILADOR = gcc
 
 # "-I" é a flag que adiciona o diretório da onde estão os cabecalhos
-FLAGS = -Iinclude
+
+FLAGS = -Iinclude #compilar normal
+#FLAGS = -Iinclude -g -O0 #debugar
+#lembrar de usar só um por vez
 
 # Cria a pasta onde ficam os arquivos objeto
 OBJ_DIR = objects
@@ -21,4 +24,4 @@ $(OBJ_DIR)/%.o: source/%.c $(CABECALHOS)
 
 # Linkagem; chama todos os arquivos .o
 biblioteca: $(OBJ)
-	$(COMPILADOR) -o $@ $^
+	$(COMPILADOR) $(FLAGS) -o $@ $^

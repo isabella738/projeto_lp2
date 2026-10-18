@@ -46,19 +46,20 @@ typedef struct{
 
 typedef struct{
     char codigo[TAM_CODIGO];
-    time_t tempo_inicio;
     int prazo;
     int atrasado; //0 ou 1
+    time_t tempo_inicio;
 }Emprestimos;
 
 typedef struct {
     char nome[TAM_STRING];
     char senha[TAM_SENHA];
-    int qtd_emp;
     int suspenso;//0 ou 1. usuario fica bloqueado de fazer pegar novos livros ate quitar seus atrasos
+    int qtd_emp;
     Emprestimos emprestimo[MAX_EMP];
 }Usuarios;
 
+// 'extern' procura nos arquivos do programa pelas variaveis com este nome (no caso, em source/definitions)
 extern Livros livro[MAX_LIVROS];
 extern int total_livros;
 extern Usuarios usuario[TAM_USUARIOS];

@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Biblioteca",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/VERSAO_1/biblioteca",
+            "cwd": "${workspaceFolder}/VERSAO_1",
+            "stopAtEntry": false,
+            "MIMode": "gdb",
+            "externalConsole": false
+        }
+    ]
+}

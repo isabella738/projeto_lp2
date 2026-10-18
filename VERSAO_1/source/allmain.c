@@ -13,13 +13,15 @@ int main(){
     passagem_de_tempo();
 
     do{
-        printf("Biblioteca [INSIRA UM NOME MANEIRO AQUI]\n\n");
-
-        printf("Escolha uma acao:\n");
-        printf("[1] Entrar como Proprietário\n");
-        printf("[2] Entrar como Usuario\n");
-        printf("[3] Cadastrar novo usuario\n");
-        printf("[4] Salvar e Sair\n\n");
+        printf(
+            "Biblioteca [INSIRA UM NOME MANEIRO AQUI]\n"
+            "\n"
+            "Escolha uma acao:\n"
+            "[1] Entrar como Proprietário\n"
+            "[2] Entrar como Usuario\n"
+            "[3] Cadastrar novo usuario\n"
+            "[4] Salvar e Sair\n"
+        );
 
         int x = entrada_usuario();
 
