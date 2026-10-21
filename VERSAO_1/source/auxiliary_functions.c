@@ -7,6 +7,7 @@ Sao genericas, portanto, quando possivel, não devem usar as variaveis globais d
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "settings.h"
 #include "input_verification.h"
 #include "auxiliary_functions.h"

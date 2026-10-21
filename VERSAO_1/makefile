@@ -1,27 +1,2 @@
-COMPILADOR = gcc
-
-# "-I" é a flag que adiciona o diretório da onde estão os cabecalhos
-
-FLAGS = -Iinclude #compilar normal
-#FLAGS = -Iinclude -g -O0 #debugar
-#lembrar de usar só um por vez
-
-# Cria a pasta onde ficam os arquivos objeto
-OBJ_DIR = objects
-
-# 'FONTES' referencia todos os arquivos .c do projeto
-FONTES = $(shell find source -type f -name "*.c")
-
-# Gera arquivos objetos de todos os arquivos de FONTES
-OBJ = $(FONTES:source/%.c=$(OBJ_DIR)/%.o)
-
-#'CABECALHOS' referencia todos os arquivos .h do projeto
-CABECALHOS = $(shell find source -type f -name "*.h")
-
-# Regra de compilacao dos .c
-$(OBJ_DIR)/%.o: source/%.c $(CABECALHOS)
-	$(COMPILADOR) $(FLAGS) -c $< -o $@
-
-# Linkagem; chama todos os arquivos .o
-biblioteca: $(OBJ)
-	$(COMPILADOR) $(FLAGS) -o $@ $^
+all:
+	gcc -I./include source/allmain.c source/main.c source/definitions.c source/input_verification.c source/auxiliary_functions.c -o biblioteca
