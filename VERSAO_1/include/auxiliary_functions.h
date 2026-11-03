@@ -30,6 +30,8 @@ void imprimir_info_usuario(Usuarios u);//imprime nome, qntd de livros emprestado
 void apagar_livro(Livros lista[], int x, int *tam);//apaga o livro x de uma lista do tipo Livros
 void apagar_usuario(Usuarios users[], int x, int *tam);//apaga o usuario x de uma lista do tipo Usuarios
 void swap_livros(Livros *livro1, Livros *livro2);
+void quick_sort_strings(Livros vetor[], int inicio, int fim, char chave[]);
+void quick_sort_inteiros(Livros vetor[], int inicio, int fim, char chave[], int crescente);
 
 int livro_duplicado(Livros l);//verifica se existe um ja existe um livro com o mesmo titulo, autor e editora de 'l' cadastrado no sistema
 void passagem_de_tempo(); // calcula o tempo dos emprestimos

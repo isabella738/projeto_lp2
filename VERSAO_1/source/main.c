@@ -44,7 +44,6 @@ int listagem(){
     if(erro(1)) return 0;
     /*
         Ordena por:
-        - Adicionados recentemente
         - Ordem alfabetica
         - Ano de publicacao (+ recentes)
         - Ano de publicacao (+ antigos)
@@ -63,73 +62,48 @@ int listagem(){
         "**=======================**\n"
         "\n"
         "Ordenar por:\n"
-        "(1) Adicionados recentemente\n"
+        "(1) Adicionados primeiro\n"
         "(2) Ordem alfabetica (titulo)\n"
-        "(3) Ano de publicacao (+ recentes primeiro)\n"
-        "(4) Ano de publicacao (+ antigos primeiro)\n"
+        "(3) Ordem alfabetica (autor)\n"
+        "(4) Ordem alfabetica (editora)\n"
+        "(5) Ano de publicacao \n"
+        "(6) Numero de exemplares disponiveis\n"
+        "(7) Numero de edicao\n"
         "(0) Sair\n"
     );
 
-    while(ler_int(&n, 0, 4));
+    while(ler_int(&n, 0, 7));
     if(!n) return 0;
+
+    int crescente = 0;
+    if(n>=5 && n<=7){
+        printf("Em ordem decrescente(1) ou crescente(2)?\n");
+        while(ler_int(&crescente, 1, 2));
+        if(!crescente) return 0;
+        crescente--;
+    }
 
     memcpy(lista, livro, sizeof(Livros)* total_livros);
 
-    if(n == 1){
-        for(int i=0; i<total_livros; i++){
-            lista[total_livros - 1 - i] = livro[i];
-        }
-    }
-    else if(n == 2){//exibe em ordem alfabetica (pelo titulo)
-        for(int i=0; i<total_livros; i++){
-            for(int j=i+1; j<total_livros; j++){
-
-                char string1[strlen(lista[i].titulo)+1], string2[strlen(lista[j].titulo)+1];
-                int a=0, b=0;
-
-                strcpy(string1, lista[i].titulo); letras_minusculas(string1);
-                strcpy(string2, lista[j].titulo); letras_minusculas(string2);
-
-                for(int k=0; k<strlen(string1) && k<strlen(string2); k++){
-                    if(string1[k] != string2[k]){ //a primeira ocorrencia de divergencia de caracteres entre as duas strings
-                        a = string1[k]; b = string2[k];
-                        break;
-                    }
-                }
-
-                if(b < a || (a == b && strlen(string2) < strlen(string1))){
-                    /*
-                        Ou seja:
-                        Se o caractere b vir antes do a, a string2 vem antes de string1
-                        Ou então, se não houver divergencias entre string1 e string2, mas a segunda
-                        for menor que a primeira (substring), então ela vem antes
-                    */
-                    swap_livros(&lista[i], &lista[j]);
-                }
-            }
-        }
-    }
-    else if(n == 3){//ano de publicacao, mais recentes
-        for(int i=0; i<total_livros; i++){
-            for(int j=i+1; j<total_livros; j++){
-
-                if(lista[j].ano > lista[i].ano){
-                    swap_livros(&lista[i], &lista[j]);
-                }
-
-            }
-        }
-    }
-    else if(n == 4){//ano de publicacao, mais antigos
-        for(int i=0; i<total_livros; i++){
-            for(int j=i+1; j<total_livros; j++){
-
-                if(lista[j].ano < lista[i].ano){
-                    swap_livros(&lista[i], &lista[j]);
-                }
-
-            }
-        }
+    switch(n){
+        case 2:
+            quick_sort_strings(lista, 0, total_livros-1, "titulo");
+            break;
+        case 3:
+            quick_sort_strings(lista, 0, total_livros-1, "autor");
+            break;
+        case 4:
+            quick_sort_strings(lista, 0, total_livros-1, "editora");
+            break;
+        case 5:
+            quick_sort_inteiros(lista, 0, total_livros-1, "ano", crescente);
+            break;
+        case 6:
+            quick_sort_inteiros(lista, 0, total_livros-1, "qtdDisponiveis", crescente);
+            break;
+        case 7:
+            quick_sort_inteiros(lista, 0, total_livros-1, "edicao", crescente);
+            break;
     }
 
     do{

@@ -221,6 +221,108 @@ void swap_livros(Livros *livro1, Livros *livro2){
     *livro2 = temp;
 }
 
+void quick_sort_strings(Livros vetor[], int inicio, int fim, char chave[]){
+    int p = inicio, i = fim;
+
+    if(fim <= inicio) return; // condição de parada
+
+    int sentido = -1;
+    do{
+        int cmp = 0;
+        if(strcmp(chave, "autor") == 0)
+            cmp = strcmp(vetor[p].autor, vetor[i].autor);
+
+        else if(strcmp(chave, "editora") == 0)
+            cmp = strcmp(vetor[p].editora, vetor[i].editora);
+
+        else //por padrao, é ordenado por titulo
+            cmp = strcmp(vetor[p].titulo, vetor[i].titulo);
+            
+        if(sentido == -1){
+            if(cmp > 0){
+                Livros a = vetor[p];
+                vetor[p] = vetor[i];
+                vetor[i] = a;
+
+                int aux = p;
+                p = i;
+                i = aux;
+
+                sentido = 1;
+            }
+        }
+        else{
+            if(cmp < 0){
+                Livros a = vetor[p];
+                vetor[p] = vetor[i];
+                vetor[i] = a;
+
+                int aux = p;
+                p = i;
+                i = aux;
+
+                sentido = -1;
+            }
+        }
+        i += sentido;
+    }while(i != p);
+
+    quick_sort_strings(vetor, inicio, p-1, chave);
+    quick_sort_strings(vetor, p+1, fim, chave);
+
+}
+
+void quick_sort_inteiros(Livros vetor[], int inicio, int fim, char chave[], int crescente){
+    int p = inicio, i = fim;
+
+    if(fim <= inicio) return; // condição de parada
+    int sentido = -1;
+
+    do{
+        int cmp = 0;
+        if(strcmp(chave, "qtdDisponiveis") == 0)
+            cmp = vetor[p].qtdDisponiveis - vetor[i].qtdDisponiveis;
+
+        else if(strcmp(chave, "edicao") == 0) //nao sei a utilidade desse, mas ta aí, que existe, existe
+            cmp = vetor[p].edicao - vetor[i].edicao;
+
+        else //por padrao, é ordenado por ano
+            cmp = vetor[p].ano - vetor[i].ano;
+            
+        if(sentido == -1){
+            if((crescente && cmp > 0) || (!crescente && cmp < 0)){
+                Livros a = vetor[p];
+                vetor[p] = vetor[i];
+                vetor[i] = a;
+
+                int aux = p;
+                p = i;
+                i = aux;
+
+                sentido = 1;
+            }
+        }
+        else{
+            if((crescente && cmp < 0) || (!crescente && cmp > 0)){
+                Livros a = vetor[p];
+                vetor[p] = vetor[i];
+                vetor[i] = a;
+
+                int aux = p;
+                p = i;
+                i = aux;
+
+                sentido = -1;
+            }
+        }
+        i += sentido;
+    }while(i != p);
+
+    quick_sort_inteiros(vetor, inicio, p-1, chave, crescente);
+    quick_sort_inteiros(vetor, p+1, fim, chave, crescente);
+
+}
+
 //
 //Outros
 
@@ -319,7 +421,7 @@ void carregar_dados(){
     FILE *arquivo;
 
     //Leitura de Usuarios
-    arquivo = fopen("dados_programa/usuarios.txt", "r");
+    arquivo = fopen("dados/usuarios.txt", "r");
     if(arquivo == NULL){
         printf("Erro ao carregar usuarios. O programa iniciara sem usuarios cadastrados.\n");
     }
@@ -345,7 +447,7 @@ void carregar_dados(){
     }
 
     //Leitura de Livros
-    arquivo = fopen("dados_programa/livros.txt", "r");
+    arquivo = fopen("dados/livros.txt", "r");
     if(arquivo == NULL){
         printf("Erro ao carregar livros. O programa iniciara sem livros cadastrados.\n");
     }
